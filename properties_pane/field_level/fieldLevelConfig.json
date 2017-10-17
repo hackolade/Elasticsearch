@@ -1,0 +1,467 @@
+/*
+* Copyright © 2016-2017 by IntegrIT S.A. dba Hackolade.  All rights reserved.
+*
+* The copyright to the computer software herein is the property of IntegrIT S.A.
+* The software may be used and/or copied only with the written permission of 
+* IntegrIT S.A. or in accordance with the terms and conditions stipulated in 
+* the agreement/contract under which the software has been supplied. 
+
+
+In order to define custom properties for any object's properties pane, you may copy/paste from the following,
+making sure that you maintain a proper JSON format.
+
+			{
+				"propertyName": "Simple text",
+				"propertyKeyword": "simpletextProp",
+				"shouldValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "Text area",
+				"propertyKeyword": "textareaProp",
+				"propertyValidate": false,
+				"propertyTooltip": "Popup for multi-line text entry",
+				"propertyType": "details",
+				"template": "textarea"
+			},
+			{
+				"propertyName": "Dropdown selection",
+				"propertyKeyword": "dropdownProp",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of options",
+				"propertyType": "select",
+				"options": [
+					"Option 1",
+					"Option 2",
+					"Option 3",
+					"Option 4"
+				]
+			},
+			{
+				"propertyName": "Numeric",
+				"propertyKeyword": "numericProp",
+				"propertyValidate": true,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "Checkbox",
+				"propertyKeyword": "checkboxProp",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			}
+
+*/
+
+{
+	"lowerTab": "JsonDetails",
+	"structure": {
+		"string": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			{
+				"propertyName": "Mode",
+				"propertyKeyword": "mode",
+				"shouldValidate": false,
+				"propertyType": "select",
+				"options": [
+					"text",
+					"keyword"
+				],
+				"data": "options",
+				"valueType": "string"
+			},
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "eager_global_ordinals",
+				"propertyKeyword": "eager_global_ordinals",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "ignore_above",
+				"propertyKeyword": "ignore_above",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "include_in_all",
+				"propertyKeyword": "include_in_all",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "ignore_above",
+				"propertyKeyword": "ignore_above",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "index_options",
+				"propertyKeyword": "index_options",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of parameter controls for information is added to the inverted index, for search and highlighting purposes",
+				"propertyType": "select",
+				"options": [
+					"docs",
+					"freqs",
+					"positions",
+					"offsets"
+				]
+			},
+			{
+				"propertyName": "norms",
+				"propertyKeyword": "norms",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "similarity",
+				"propertyKeyword": "similarity",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of scoring algorithm or similarity per field",
+				"propertyType": "select",
+				"options": [
+					"BM25",
+					"classic",
+					"boolean"
+				]
+			},
+			{
+				"propertyName": "normalizer",
+				"propertyKeyword": "normalizer",
+				"propertyValidate": false,
+				"propertyType": "text"
+			},
+			"minLength",
+			"maxLength",
+			"pattern",
+			"format",
+			"enum",
+			"sample",
+			"comments"
+		],
+		"number": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			"default",
+			{
+				"propertyName": "Mode",
+				"propertyKeyword": "mode",
+				"shouldValidate": false,
+				"propertyType": "select",
+				"options": [
+					"long",
+					"integer",
+					"short",
+					"byte",
+					"double",
+					"float",
+					"half_float",
+					"scaled_float"
+				],
+				"data": "options",
+				"valueType": "string"
+			},
+			{
+				"propertyName": "coerce",
+				"propertyKeyword": "coerce",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "ignore_malformed",
+				"propertyKeyword": "ignore_malformed",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "include_in_all",
+				"propertyKeyword": "include_in_all",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "scaling_factor",
+				"propertyKeyword": "scaling_factor",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},	
+			"unit",
+			"minimum",
+			"exclusiveMinimum",
+			"maximum",
+			"exclusiveMaximum",
+			"multipleOf",
+			"divisibleBy",
+			"enum",
+			"sample",
+			"comments"
+		],
+		"date": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"default",
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "format",
+				"propertyKeyword": "format",
+				"shouldValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "locale",
+				"propertyKeyword": "locale",
+				"shouldValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "ignore_malformed",
+				"propertyKeyword": "ignore_malformed",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "include_in_all",
+				"propertyKeyword": "include_in_all",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			"sample",
+			"comments"
+		],
+		"boolean": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"default",
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			"sample",
+			"comments"
+		],
+/*
+		"binary": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"default",
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			"sample",
+			"comments"
+		],
+		"range": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"default",
+			{
+				"propertyName": "Mode",
+				"propertyKeyword": "mode",
+				"shouldValidate": false,
+				"propertyType": "select",
+				"options": [
+					"integer_range",
+					"float_range",
+					"long_range",
+					"double_range",
+					"date_range"
+				]
+			},
+			{
+				"propertyName": "coerce",
+				"propertyKeyword": "coerce",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"valueType": "number"
+			},
+			{
+				"propertyName": "include_in_all",
+				"propertyKeyword": "include_in_all",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
+			},
+			"minProperties": "",
+			"maxProperties": "",
+			"additionalProperties": false,
+			"comments"
+		],
+*/
+		"binary": "binary"
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"name": "nested",
+	"erdAbbreviation": "<nest>",
+	"dtdAbbreviation": "[...]",
+	"parentType": "array",
+	"sample": ["sample"],
+	"useSample": true,
+	"defaultValues": {
+		"type": "array",
+		"childType": "array",
+		"properties": [],
+		"primaryKey": false,
+		"relationshipType": "",
+		"parentRelationship": "",
+		"childRelationships": [],
+		"foreignCollection": "",
+		"foreignField": [],
+		"additionalItems": true,
+		"minItems": "",
+		"maxItems": "",
+		"uniqueItems": false
+	}
+}
