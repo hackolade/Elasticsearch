@@ -386,7 +386,6 @@ making sure that you maintain a proper JSON format.
 			"sample",
 			"comments"
 		],
-/*
 		"binary": [
 			"name",
 			"schemaId",
@@ -394,7 +393,6 @@ making sure that you maintain a proper JSON format.
 			"description",
 			"dependencies",
 			"required",
-			"default",
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
@@ -407,7 +405,6 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyType": "checkbox"
 			},
-			"sample",
 			"comments"
 		],
 		"range": [
@@ -417,7 +414,6 @@ making sure that you maintain a proper JSON format.
 			"description",
 			"dependencies",
 			"required",
-			"default",
 			{
 				"propertyName": "Mode",
 				"propertyKeyword": "mode",
@@ -456,12 +452,10 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyType": "checkbox"
 			},
-			"minProperties": "",
-			"maxProperties": "",
-			"additionalProperties": false,
+			"minProperties",
+			"maxProperties",
+			"additionalProperties",
 			"comments"
-		],
-*/
-		"binary": "binary"
+		]
 	}
 }
