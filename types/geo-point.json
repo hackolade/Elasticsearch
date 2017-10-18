@@ -1,0 +1,30 @@
+{
+	"name": "geo-point",
+	"erdAbbreviation": "<gp>",
+	"dtdAbbreviation": "{...}",
+	"parentType": "document",
+	"defaultValues": {
+		"type": "document",
+		"childType": "geo-point",
+		"childValueType": "object",
+		"primaryKey": false,
+		"relationshipType": "",
+		"parentRelationship": "",
+		"childRelationships": [],
+		"foreignCollection": "",
+		"foreignField": [],
+		"properties": [],
+		"dependencies": [],
+		"minProperties": "",
+		"maxProperties": "",
+		"additionalProperties": false,
+		"enum": [],
+		"subTypes": [
+			{ "name": "object", "parentType": "document", "snippet": "geopoint-object" },
+			{ "name": "string", "parentType": "string", "snippet": "geopoint-string" },
+			{ "name": "geohash", "parentType": "string", "snippet": "geopoint-geohash" },
+			{ "name": "geoJSON", "parentType": "array", "snippet": "geopoint-geojson" },
+			{ "name": "geo-bounding", "parentType": "document", "snippet": "geopoint-geo-bounding" }
+		]
+	}
+}

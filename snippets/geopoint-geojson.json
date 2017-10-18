@@ -1,0 +1,8 @@
+{
+	"name": "geopoint-geojson",
+	"properties": [{
+		"type": "number"
+	}, {
+		"type": "number"
+	}]
+}

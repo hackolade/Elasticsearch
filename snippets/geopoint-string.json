@@ -1,0 +1,5 @@
+{
+	"name": "geopoint-string",
+	"default": "[12.32, 24.5]"
+	/*"pattern": "^\d+(\.\d+)?\,\ *\d+(\.\d+)?$"*/
+}

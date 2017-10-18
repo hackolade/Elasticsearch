@@ -1,0 +1,10 @@
+{
+	"name": "geopoint-object",
+	"properties": [{
+		"name": "lat",
+		"type": "number"
+	}, {
+		"name": "lon",
+		"type": "number"
+	}]
+}
