@@ -98,7 +98,8 @@ making sure that you maintain a proper JSON format.
 			"propertyKeyword": "source",
 			"defaultName": "_source",
 			"propertyPrimaryKey": false,
-			"propertyType": "object",
+			"propertyType": "text",
+			"valueType": "object",
 			"typeName": "Data type",
 			"typeOptions": [
 				"object"
