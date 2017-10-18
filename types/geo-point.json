@@ -6,7 +6,6 @@
 	"defaultValues": {
 		"type": "document",
 		"childType": "geo-point",
-		"childValueType": "object",
 		"primaryKey": false,
 		"relationshipType": "",
 		"parentRelationship": "",
@@ -20,11 +19,11 @@
 		"additionalProperties": false,
 		"enum": [],
 		"subTypes": [
-			{ "name": "object", "parentType": "document", "snippet": "geopoint-object" },
-			{ "name": "string", "parentType": "string", "snippet": "geopoint-string" },
-			{ "name": "geohash", "parentType": "string", "snippet": "geopoint-geohash" },
-			{ "name": "geoJSON", "parentType": "array", "snippet": "geopoint-geojson" },
-			{ "name": "geo-bounding", "parentType": "document", "snippet": "geopoint-geo-bounding" }
+			{ "name": "object", "snippet": "geopoint-object" },
+			{ "name": "string", "snippet": "geopoint-string" },
+			{ "name": "geohash", "snippet": "geopoint-geohash" },
+			{ "name": "geoJSON", "snippet": "geopoint-geojson" },
+			{ "name": "geo-bounding", "snippet": "geopoint-geo-bounding" }
 		]
 	}
 }

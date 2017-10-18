@@ -1,4 +1,5 @@
 {
 	"name": "geopoint-geohash",
+	"parentType": "string",	
 	"default": "drm3btev3e86"
 }
