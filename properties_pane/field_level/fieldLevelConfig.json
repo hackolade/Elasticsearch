@@ -344,7 +344,6 @@ making sure that you maintain a proper JSON format.
 			"sample",
 			"comments"
 		],
-		"___1": [],
 		"boolean": [
 			"name",
 			"schemaId",
@@ -458,6 +457,7 @@ making sure that you maintain a proper JSON format.
 			"additionalProperties",
 			"comments"
 		],
+		"___1": [],
 		"geo-point": [
 			"name",
 			"schemaId",
@@ -465,7 +465,8 @@ making sure that you maintain a proper JSON format.
 			"description",
 			"required",
 			"comments",
-			"subtypes"
-		]
+			"subtype"
+		],
+		"___2": []
 	}
 }
