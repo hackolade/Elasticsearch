@@ -458,15 +458,6 @@ making sure that you maintain a proper JSON format.
 			"comments"
 		],
 		"___1": [],
-		"geo-point": [
-			"name",
-			"schemaId",
-			"type",
-			"description",
-			"required",
-			"comments",
-			"subtype"
-		],
 		"geo-shape": [
 			"name",
 			"schemaId",
