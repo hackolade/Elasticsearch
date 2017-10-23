@@ -456,6 +456,17 @@ making sure that you maintain a proper JSON format.
 			"maxProperties",
 			"additionalProperties",
 			"comments"
-		]
+		],
+		"___1": [],
+		"geo-shape": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"required",
+			"comments",
+			"subtype"
+		],
+		"___2": []
 	}
 }
