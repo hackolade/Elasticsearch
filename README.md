@@ -1,4 +1,4 @@
-# CosmosDB-with-DocDB-API
-Hackolade plugin for Azure CosmosDB with DocumentDB API
+# Elasticsearch
+Hackolade plugin for Elasticsearch
 
 Not ready for production!!
