@@ -467,6 +467,15 @@ making sure that you maintain a proper JSON format.
 			"comments",
 			"subtype"
 		],
+		"geo-shape": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"required",
+			"comments",
+			"subtype"
+		],
 		"___2": []
 	}
 }
