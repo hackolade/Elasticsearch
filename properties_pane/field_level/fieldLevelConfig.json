@@ -112,13 +112,6 @@ making sure that you maintain a proper JSON format.
 				"propertyType": "checkbox"
 			},
 			{
-				"propertyName": "ignore_above",
-				"propertyKeyword": "ignore_above",
-				"propertyValidate": false,
-				"propertyType": "numeric",
-				"valueType": "number"
-			},
-			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
