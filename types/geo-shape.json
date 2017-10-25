@@ -1,0 +1,33 @@
+{
+	"name": "geo-shape",
+	"erdAbbreviation": "<gp>",
+	"dtdAbbreviation": "{...}",
+	"parentType": "document",
+	"defaultValues": {
+		"type": "document",
+		"childType": "geo-shape",
+		"primaryKey": false,
+		"relationshipType": "",
+		"parentRelationship": "",
+		"childRelationships": [],
+		"foreignCollection": "",
+		"foreignField": [],
+		"properties": [],
+		"dependencies": [],
+		"minProperties": "",
+		"maxProperties": "",
+		"additionalProperties": false,
+		"enum": [],
+		"subTypes": [
+			{ "name": "point", "snippet": "geoshape-point" },
+			{ "name": "linestring", "snippet": "geoshape-linestring" },
+			{ "name": "polygon", "snippet": "geoshape-polygon" },
+			{ "name": "multipoint", "snippet": "geoshape-multipoint" },
+			{ "name": "multilinestring", "snippet": "geoshape-multilinestring" },
+			{ "name": "multipolygon", "snippet": "geoshape-multipolygon" },
+			{ "name": "geometrycollection", "snippet": "geoshape-geometrycollection" },
+			{ "name": "envelope", "snippet": "geoshape-envelope" },
+			{ "name": "circle", "snippet": "geoshape-circle" }
+		]
+	}
+}

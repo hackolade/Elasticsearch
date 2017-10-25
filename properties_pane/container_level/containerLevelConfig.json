@@ -14,7 +14,8 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "Simple text",
 				"propertyKeyword": "simpletextProp",
 				"shouldValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"sampleGen": "&containerName|&entityName|&random|<value>"
 			},
 			{
 				"propertyName": "Text area",
@@ -42,7 +43,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "numericProp",
 				"propertyValidate": true,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"sampleGen": "&containerName|&entityName|&random|<value>"
 			},
 			{
 				"propertyName": "Checkbox",
@@ -66,7 +68,8 @@ making sure that you maintain a proper JSON format.
 			"typeName": "Data type",
 			"typeOptions": ["string"],
 			"defaultType": "string",
-			"disabledFieldOption": true
+			"disabledFieldOption": true,
+			"sampleGen": "&containerName"
 		},{
 			"labelName": "Type",
 			"propertyName": "Document Type",
@@ -77,7 +80,8 @@ making sure that you maintain a proper JSON format.
 			"typeName": "Data type",
 			"typeOptions": ["string"],
 			"defaultType": "string",
-			"disabledFieldOption": true
+			"disabledFieldOption": true,
+			"sampleGen": "&entityName"
 		},{
 			"labelName": "ID",
 			"propertyName": "Document ID",
@@ -91,14 +95,16 @@ making sure that you maintain a proper JSON format.
 				"number"
 			],
 			"defaultType": "number",
-			"disabledFieldOption": true
+			"disabledFieldOption": true,
+			"sampleGen": "&random"
 		},{
 			"labelName": "Source",
 			"propertyName": "source",
 			"propertyKeyword": "source",
 			"defaultName": "_source",
 			"propertyPrimaryKey": false,
-			"propertyType": "object",
+			"propertyType": "text",
+			"valueType": "object",
 			"typeName": "Data type",
 			"typeOptions": [
 				"object"
