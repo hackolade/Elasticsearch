@@ -1,4 +1,4 @@
-# HBase
+# Elasticsearch
 Plugin to enable Elasticsearch server as a target in Hackolade data modeling.
 
 <div class="main-content">
