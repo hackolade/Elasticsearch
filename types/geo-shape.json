@@ -4,8 +4,6 @@
 	"dtdAbbreviation": "{...}",
 	"parentType": "document",
 	"defaultValues": {
-		"type": "document",
-		"childType": "geo-shape",
 		"primaryKey": false,
 		"relationshipType": "",
 		"parentRelationship": "",
