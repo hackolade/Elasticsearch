@@ -2,7 +2,8 @@
 	"model": {
 		"modelName": "New model",
 		"dbVersion": "",
-		"dbVendor": "Elasticsearch"
+		"dbVendor": "Elasticsearch",
+		"port": 9200
 	},
 	"container": {
 		"name": "New index",
