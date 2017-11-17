@@ -42,7 +42,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "numericProp",
 				"propertyValidate": true,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "Checkbox",
@@ -52,7 +53,6 @@ making sure that you maintain a proper JSON format.
 			}
 
 */
-
 {
 	"lowerTab": "JsonDetails",
 	"structure": {
@@ -84,7 +84,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -103,7 +104,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "ignore_above",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "include_in_all",
@@ -215,7 +217,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -258,7 +261,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "scaling_factor",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},	
 			"unit",
 			"minimum",
@@ -284,7 +288,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -350,7 +355,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -431,7 +437,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "text",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "include_in_all",

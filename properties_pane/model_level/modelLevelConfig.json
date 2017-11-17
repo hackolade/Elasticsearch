@@ -41,7 +41,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "numericProp",
 				"propertyValidate": true,
 				"propertyType": "text",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "Checkbox",
@@ -100,7 +101,8 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyTooltip": "Port",
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "Comments",
