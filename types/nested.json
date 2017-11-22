@@ -6,8 +6,7 @@
 	"sample": ["sample"],
 	"useSample": true,
 	"defaultValues": {
-		"type": "array",
-		"childType": "array",
+		"childValueType": "object",
 		"properties": [],
 		"primaryKey": false,
 		"relationshipType": "",

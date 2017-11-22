@@ -14,7 +14,8 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "Simple text",
 				"propertyKeyword": "simpletextProp",
 				"shouldValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"sampleGen": "&containerName|&entityName|&random|<value>"
 			},
 			{
 				"propertyName": "Text area",
@@ -42,13 +43,39 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "numericProp",
 				"propertyValidate": true,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false,
+				"sampleGen": "&containerName|&entityName|&random|<value>"
 			},
 			{
 				"propertyName": "Checkbox",
 				"propertyKeyword": "checkboxProp",
 				"shouldValidate": false,
 				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "Group",
+				"propertyType": "group",
+				"propertyKeyword": "grpProp",
+				"shouldValidate": true,
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Simple Grp Text",
+						"propertyKeyword": "simpleGrpText",
+						"shouldValidate": false,
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Group Number",
+						"propertyKeyword": "grpNumber",
+						"propertyValidate": true,
+						"propertyType": "numeric",
+						"valueType": "number",
+						"allowNegative": false
+					}
+				]
 			}
 
 */
@@ -84,7 +111,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -103,20 +131,14 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "ignore_above",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
 				"propertyType": "checkbox"
-			},
-			{
-				"propertyName": "ignore_above",
-				"propertyKeyword": "ignore_above",
-				"propertyValidate": false,
-				"propertyType": "numeric",
-				"valueType": "number"
 			},
 			{
 				"propertyName": "index",
@@ -222,7 +244,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -265,7 +288,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "scaling_factor",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},	
 			"unit",
 			"minimum",
@@ -291,7 +315,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -357,7 +382,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "numeric",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "doc_values",
@@ -386,7 +412,6 @@ making sure that you maintain a proper JSON format.
 			"sample",
 			"comments"
 		],
-/*
 		"binary": [
 			"name",
 			"schemaId",
@@ -394,7 +419,6 @@ making sure that you maintain a proper JSON format.
 			"description",
 			"dependencies",
 			"required",
-			"default",
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
@@ -407,7 +431,6 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyType": "checkbox"
 			},
-			"sample",
 			"comments"
 		],
 		"range": [
@@ -417,7 +440,6 @@ making sure that you maintain a proper JSON format.
 			"description",
 			"dependencies",
 			"required",
-			"default",
 			{
 				"propertyName": "Mode",
 				"propertyKeyword": "mode",
@@ -442,7 +464,8 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
 				"propertyType": "text",
-				"valueType": "number"
+				"valueType": "number",
+				"allowNegative": false
 			},
 			{
 				"propertyName": "include_in_all",
@@ -456,12 +479,30 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyType": "checkbox"
 			},
-			"minProperties": "",
-			"maxProperties": "",
-			"additionalProperties": false,
+			"minProperties",
+			"maxProperties",
+			"additionalProperties",
 			"comments"
 		],
-*/
-		"binary": "binary"
+		"___1": [],
+		"geo-point": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"required",
+			"comments",
+			"subtype"
+		],
+		"geo-shape": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"required",
+			"comments",
+			"subtype"
+		],
+		"___2": []
 	}
 }
