@@ -116,10 +116,9 @@ making sure that you maintain a proper JSON format.
 			"propertyType": "text",
 			"typeName": "Data type",
 			"typeOptions": [
-				"string",
-				"number"
+				"string"
 			],
-			"defaultType": "number",
+			"defaultType": "string",
 			"disabledFieldOption": true,
 			"sampleGen": "&random"
 		},{
