@@ -134,7 +134,8 @@ making sure that you maintain a proper JSON format.
 				"object"
 			],
 			"defaultType": "object",
-			"disabledFieldOption": true
+			"disabledFieldOption": true,
+			"hasERDDivider": false
 		}],
 		"structure": [
 			{
