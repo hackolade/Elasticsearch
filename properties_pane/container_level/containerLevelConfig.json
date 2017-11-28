@@ -44,6 +44,7 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": true,
 				"propertyType": "numeric",
 				"valueType": "number",
+				"allowNegative": false,
 				"sampleGen": "&containerName|&entityName|&random|<value>"
 			},
 			{
@@ -51,6 +52,30 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "checkboxProp",
 				"shouldValidate": false,
 				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "Group",
+				"propertyType": "group",
+				"propertyKeyword": "grpProp",
+				"shouldValidate": true,
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Simple Grp Text",
+						"propertyKeyword": "simpleGrpText",
+						"shouldValidate": false,
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Group Number",
+						"propertyKeyword": "grpNumber",
+						"propertyValidate": true,
+						"propertyType": "numeric",
+						"valueType": "number",
+						"allowNegative": false
+					}
+				]
 			}
 
 */
@@ -91,10 +116,9 @@ making sure that you maintain a proper JSON format.
 			"propertyType": "text",
 			"typeName": "Data type",
 			"typeOptions": [
-				"string",
-				"number"
+				"string"
 			],
-			"defaultType": "number",
+			"defaultType": "string",
 			"disabledFieldOption": true,
 			"sampleGen": "&random"
 		},{
