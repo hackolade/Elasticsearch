@@ -135,7 +135,7 @@ making sure that you maintain a proper JSON format.
 			],
 			"defaultType": "object",
 			"disabledFieldOption": true,
-			"hasERDDivider": false
+			"underERDDivider": true
 		}],
 		"structure": [
 			{
