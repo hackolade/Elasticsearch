@@ -15,6 +15,9 @@
 		"foreignCollection": "",
 		"foreignField": [],
 		"enum": [],
-		"sample": ""
+		"sample": "",
+		"mode": "text",
+		"index_options": "docs",
+		"similarity": "BM25"
 	}
 }

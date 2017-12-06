@@ -4,7 +4,6 @@
 	"dtdAbbreviation": "{x-y}",
 	"parentType": "document",
 	"defaultValues": {
-		"primaryKey": false,
 		"relationshipType": "",
 		"parentRelationship": "",
 		"childRelationships": [],
@@ -15,6 +14,7 @@
 		"minProperties": "",
 		"maxProperties": "",
 		"additionalProperties": false,
-		"enum": []
+		"enum": [],
+		"mode": "integer_range"
 	}
 }
