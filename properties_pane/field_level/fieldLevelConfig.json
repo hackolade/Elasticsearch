@@ -106,6 +106,14 @@ making sure that you maintain a proper JSON format.
 				"valueType": "string"
 			},
 			{
+				"propertyName": "Fields",
+				"propertyKeyword": "stringfields",
+				"propertyValidate": false,
+				"propertyTooltip": "Popup for fields entry",
+				"propertyType": "details",
+				"template": "textarea"
+			},
+			{
 				"propertyName": "boost",
 				"propertyKeyword": "boost",
 				"propertyValidate": false,
