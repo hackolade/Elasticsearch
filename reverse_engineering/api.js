@@ -1,14 +1,53 @@
 'use strict';
 
 const elasticsearch = require('elasticsearch');
+const fs = require('fs');
 
 module.exports = {
 	connect: function(connectionInfo, logger, cb){
 		logger.clear();
-		let connection = new elasticsearch.Client({
-			host: `${connectionInfo.host}:${connectionInfo.port}`,
-			log: 'trace'
-		});
+		let clientParams = {};
+		let authString = "";
+
+		if (connectionInfo.username) {
+			authString = connectionInfo.username;
+		}
+
+		if (connectionInfo.password) {
+			authString += ':' + connectionInfo.password;
+		}
+
+		if (connectionInfo.connectionType === 'Direct connection') {
+			clientParams.host = {
+				protocol: connectionInfo.protocol,
+				host: connectionInfo.host,
+				port: connectionInfo.port,
+				path: connectionInfo.path,
+				auth: authString
+			};
+		} else if (connectionInfo.connectionType === 'Replica set or Sharded cluster') {
+			clientParams.hosts = connectionInfo.hosts.map(socket => {
+				return {
+					host: socket.host,
+					port: socket.port,
+					protocol: connectionInfo.protocol,
+					auth: authString
+				};
+			});
+		} else {
+			cb('Invalid connection parameters');
+		}
+
+		if (connectionInfo.is_ssl) {
+			clientParams.ssl = {
+				ca: fs.readFileSync(connectionInfo.ca),
+				rejectUnauthorized: connectionInfo.rejectUnauthorized
+			};
+		}
+
+		logger.log('info', clientParams);
+		let connection = new elasticsearch.Client(clientParams);
+
 		cb(null, connection);
 	},
 
@@ -22,13 +61,12 @@ module.exports = {
 				cb(err);
 			} else {
 				connection.ping({
-					requestTimeout: 5000,
-				}, (error) => {
-					if (err) {
-						cb(null, false);
-					} else {
-						cb(null, true);
+					requestTimeout: 5000
+				}, (error, success) => {
+					if (error) {
+						logger.log('error', error, 'Test connection', connectionInfo.hiddenKeys);
 					}
+					cb(!success);
 				});
 			}
 		});
@@ -52,9 +90,7 @@ module.exports = {
 			
 			const { includeSystemCollection } = connectionInfo;
 
-			client.indices.getMapping({
-				ignoreUnavailable: true
-			})
+			client.indices.getMapping()
 				.then(data => {
 					let result = [];
 
