@@ -2,15 +2,26 @@
 
 const elasticsearch = require('elasticsearch');
 const fs = require('fs');
+const _ = require('lodash');
 const async = require('async');
+const versions = require('../package.json').contributes.target.versions;
+
+const MAX_DOCUMENTS = 30000;
+
+let connectionParams = {};
+
+let _client = null;
 
 module.exports = {
 	connect: function(connectionInfo, logger, cb){
 		logger.clear();
 		logger.log('error', connectionInfo, 'Connection information', connectionInfo.hiddenKeys);
 		
-		let clientParams = {};
 		let authString = "";
+
+		if (_client !== null) {
+			return cb(null, _client);
+		}
 
 		if (connectionInfo.username) {
 			authString = connectionInfo.username;
@@ -21,7 +32,7 @@ module.exports = {
 		}
 
 		if (connectionInfo.connectionType === 'Direct connection') {
-			clientParams.host = {
+			connectionParams.host = {
 				protocol: connectionInfo.protocol,
 				host: connectionInfo.host,
 				port: connectionInfo.port,
@@ -29,7 +40,7 @@ module.exports = {
 				auth: authString
 			};
 		} else if (connectionInfo.connectionType === 'Replica set or Sharded cluster') {
-			clientParams.hosts = connectionInfo.hosts.map(socket => {
+			connectionParams.hosts = connectionInfo.hosts.map(socket => {
 				return {
 					host: socket.host,
 					port: socket.port,
@@ -42,18 +53,23 @@ module.exports = {
 		}
 
 		if (connectionInfo.is_ssl) {
-			clientParams.ssl = {
+			connectionParams.ssl = {
 				ca: fs.readFileSync(connectionInfo.ca),
 				rejectUnauthorized: connectionInfo.rejectUnauthorized
 			};
 		}
 
-		const connection = new elasticsearch.Client(clientParams);
+		_client = new elasticsearch.Client(connectionParams);
 
-		cb(null, connection);
+		cb(null, _client);
 	},
 
 	disconnect: function(connectionInfo, logger, cb){
+		if (_client) {
+			_client.close();
+			_clinet = null;
+		}
+		connectionParams = {};
 		cb()
 	},
 
@@ -128,21 +144,42 @@ module.exports = {
 		const indices = data.collectionData.dataBaseNames;
 		const types = data.collectionData.collections;
 
+		const bucketInfo = {
+			indexName: '_index',
+			indexType: 'string',
+			docTypeName: '_type',
+			docTypeType: 'string',
+			docIDName: '_id',
+			docIDType: 'string',
+			sourceName: '_source',
+			sourceType: 'object'
+		};
+
+		const containetLevelKeys = {
+			index: '_index',
+			docType: '_type',
+			docID: '_id',
+			source: '_source'
+		};
+
 		logger.log('info', getSamplingInfo(recordSamplingSettings, fieldInference), 'Reverse-Engineering sampling params', data.hiddenKeys);
 		logger.log('info', { Indices: indices }, 'Selected collection list', data.hiddenKeys);
 
 		async.waterfall([
 			(getDbInfo) => {
-				this.connect(data.connectionSettings, logger, getDbInfo);		
+				this.connect(data, logger, getDbInfo);
 			},
 			(client, getData) => {
 				client.info().then(info => {
+					const socket = getInfoSocket();
 					const modelInfo = {
-						name: info.name,
-						host: data.host,
-						port: +data.port,
-						dbVersion: [ info.version.number ]
+						modelName: info.name,
+						host: socket.host,
+						port: +socket.port,
+						version: getVersion(info.version.number, versions)
 					};
+
+					logger.log('info', { modelInfo }, 'Model info');
 
 					getData(null, client, modelInfo)
 				}).catch(() => getData(null, client));
@@ -161,7 +198,13 @@ module.exports = {
 							},
 							
 							(response, searchData) => {
-								searchData(null, response.count > 5000 ? 5000 : response.count);
+								const per = recordSamplingSettings.relative.value;
+								const size = (recordSamplingSettings.active === 'absolute')
+									? recordSamplingSettings.absolute.value
+									: Math.round(response.count / 100 * per);
+								const count = size > MAX_DOCUMENTS ? MAX_DOCUMENTS : size;
+
+								searchData(null, count);
 							},
 
 							(size, getTypeData) => {
@@ -175,29 +218,36 @@ module.exports = {
 							},
 
 							(data, nextCallback) => {
-								logger.log('info', {
-									indexName,
-									typeName,
-									data
-								});
-								let documents = [];
-
+								let documents = data.hits.hits;
 								
 								let documentsPackage = {
 									dbName: indexName,
 									collectionName: typeName,
-									documents: data.hits.hits,
+									documents,
 									indexes: [],
 									bucketIndexes: [],
 									views: [],
 									validation: false,
-									bucketInfo: {}
+									emptyBucket: data.hits.hits.length === 0,
+									containetLevelKeys,
+									bucketInfo
 								};
+
+								if (fieldInference.active === 'field') {
+									documentsPackage.documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+								}
 
 								nextCallback(null, documentsPackage);
 							}
 						], nextType);
-					}, nextIndex);
+					}, (err, typeData) => {
+						if (err) {
+							nextIndex(err, typeData);
+						} else {
+							const filterData = typeData.filter(docPackage => docPackage.documents.length !== 0 || includeEmptyCollection);
+							nextIndex(null, filterData);
+						}
+					});
 				}, (err, items) => {
 						next(err, items, modelInfo);
 				});
@@ -221,4 +271,51 @@ function getSamplingInfo(recordSamplingSettings, fieldInference){
 	samplingInfo.fieldInference = (fieldInference.active === 'field') ? 'keep field order' : 'alphabetical order';
 	
 	return samplingInfo;
+}
+
+function getVersion(version, versions) {
+	const arVersion = version.split('.');
+	let result = "";
+
+	versions.forEach(v => {
+		const arV = v.split('.');
+		let isVersion = false;
+
+		for (let i = 0; i < arV.length; i++) {
+			if (arV[0] === 'x') {
+				continue;
+			}
+
+			if (arVersion[i] == arV[i]) {
+				result = v;
+			} else {
+				break;
+			}
+		}
+	});
+
+	if (result) {
+		return result;
+	} else {
+		return versions[versions.length - 1];
+	}
+}
+
+function getInfoSocket() {
+	if (connectionParams.host) {
+		return {
+			host: connectionParams.host.host,
+			port: connectionParams.host.port
+		};
+	} else if (connectionParams.hosts) {
+		return {
+			host: connectionParams.hosts[0].host,
+			port: connectionParams.hosts[0].port
+		};
+	} else {
+		return {
+			host: "",
+			port: ""
+		}
+	}
 }
