@@ -2,10 +2,13 @@
 
 const elasticsearch = require('elasticsearch');
 const fs = require('fs');
+const async = require('async');
 
 module.exports = {
 	connect: function(connectionInfo, logger, cb){
 		logger.clear();
+		logger.log('error', connectionInfo, 'Connection information', connectionInfo.hiddenKeys);
+		
 		let clientParams = {};
 		let authString = "";
 
@@ -45,8 +48,7 @@ module.exports = {
 			};
 		}
 
-		logger.log('info', clientParams);
-		let connection = new elasticsearch.Client(clientParams);
+		const connection = new elasticsearch.Client(clientParams);
 
 		cb(null, connection);
 	},
@@ -123,22 +125,89 @@ module.exports = {
 	getDbCollectionsData: function(data, logger, cb){
 		let includeEmptyCollection = data.includeEmptyCollection;
 		let { recordSamplingSettings, fieldInference } = data;
-		let bucketList = data.collectionData.dataBaseNames;
-		
+		const indices = data.collectionData.dataBaseNames;
+		const types = data.collectionData.collections;
+
 		logger.log('info', getSamplingInfo(recordSamplingSettings, fieldInference), 'Reverse-Engineering sampling params', data.hiddenKeys);
-		logger.log('info', { CollectionList: bucketList }, 'Selected collection list', data.hiddenKeys);
+		logger.log('info', { Indices: indices }, 'Selected collection list', data.hiddenKeys);
 
-		this.connect(data, logger, (err, client) => {
-			client.info().then(info => {
-				let modelInfo = {
-					name: info.name,
-					host: data.host,
-					port: +data.port,
-					dbVersion: [ info.version.number ]
-				};
-			});
+		async.waterfall([
+			(getDbInfo) => {
+				this.connect(data.connectionSettings, logger, getDbInfo);		
+			},
+			(client, getData) => {
+				client.info().then(info => {
+					const modelInfo = {
+						name: info.name,
+						host: data.host,
+						port: +data.port,
+						dbVersion: [ info.version.number ]
+					};
 
-			cb(null, data);
+					getData(null, client, modelInfo)
+				}).catch(() => getData(null, client));
+			},
+			(client, modelInfo, next) => {
+				async.map(indices, (indexName, nextIndex) => {
+					async.map(types[indexName], (typeName, nextType) => {
+						async.waterfall([
+							(getSampleDocSize) => {
+								client.count({
+									index: indexName,
+									type: typeName
+								}, (err, response) => {
+									getSampleDocSize(err, response);
+								});
+							},
+							
+							(response, searchData) => {
+								searchData(null, response.count > 5000 ? 5000 : response.count);
+							},
+
+							(size, getTypeData) => {
+								client.search({
+									index: indexName,
+									type: typeName,
+									size
+								}, (err, data) => {
+									getTypeData(err, data);
+								});
+							},
+
+							(data, nextCallback) => {
+								logger.log('info', {
+									indexName,
+									typeName,
+									data
+								});
+								let documents = [];
+
+								
+								let documentsPackage = {
+									dbName: indexName,
+									collectionName: typeName,
+									documents: data.hits.hits,
+									indexes: [],
+									bucketIndexes: [],
+									views: [],
+									validation: false,
+									bucketInfo: {}
+								};
+
+								nextCallback(null, documentsPackage);
+							}
+						], nextType);
+					}, nextIndex);
+				}, (err, items) => {
+						next(err, items, modelInfo);
+				});
+			}
+		], (err, items, modelInfo) => {
+			if (err) {
+				logger.log('error', err);
+			}
+
+			cb(err, items, modelInfo);
 		});
 	}
 };

@@ -4,6 +4,7 @@
   "description": "",
   "author": "Hackolade",
   "dependencies": {
+    "async": "^2.5.0",
     "elasticsearch": "^13.3.1"
   }
 }
