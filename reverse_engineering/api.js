@@ -67,7 +67,7 @@ module.exports = {
 	disconnect: function(connectionInfo, logger, cb){
 		if (_client) {
 			_client.close();
-			_clinet = null;
+			_client = null;
 		}
 		connectionParams = {};
 		cb()
@@ -165,6 +165,8 @@ module.exports = {
 		logger.log('info', getSamplingInfo(recordSamplingSettings, fieldInference), 'Reverse-Engineering sampling params', data.hiddenKeys);
 		logger.log('info', { Indices: indices }, 'Selected collection list', data.hiddenKeys);
 
+		SchemaCreator.init();
+
 		async.waterfall([
 			(getDbInfo) => {
 				this.connect(data, logger, getDbInfo);
@@ -186,7 +188,11 @@ module.exports = {
 			},
 			(client, modelInfo, next) => {
 				async.map(indices, (indexName, nextIndex) => {
+					SchemaCreator.addIndex(indexName);
+
 					async.map(types[indexName], (typeName, nextType) => {
+						SchemaCreator.addType(typeName);
+
 						async.waterfall([
 							(getSampleDocSize) => {
 								client.count({
@@ -219,7 +225,7 @@ module.exports = {
 
 							(data, nextCallback) => {
 								let documents = data.hits.hits;
-								
+
 								let documentsPackage = {
 									dbName: indexName,
 									collectionName: typeName,
@@ -233,9 +239,13 @@ module.exports = {
 									bucketInfo
 								};
 
+								const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+
 								if (fieldInference.active === 'field') {
-									documentsPackage.documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+									documentsPackage.documentTemplate = documentTemplate;
 								}
+
+								SchemaCreator.addSample(indexName, typeName, documentTemplate);
 
 								nextCallback(null, documentsPackage);
 							}
@@ -249,15 +259,21 @@ module.exports = {
 						}
 					});
 				}, (err, items) => {
-						next(err, items, modelInfo);
+						next(err, items, modelInfo, client);
 				});
 			}
-		], (err, items, modelInfo) => {
+		], (err, items, modelInfo, client) => {
 			if (err) {
 				logger.log('error', err);
 			}
+			SchemaCreator.getSchema(client, logger).then((schemas) => {
+				logger.log('info', schemas, 'schema');
+				cb(err, items, modelInfo);
+			}).catch((...error) => {
+				logger.log('error', error, 'error mapping');
+				cb(err, items, modelInfo);
+			});
 
-			cb(err, items, modelInfo);
 		});
 	}
 };
@@ -319,3 +335,138 @@ function getInfoSocket() {
 		}
 	}
 }
+
+const SchemaCreator = {
+	indices: [],
+	types: [],
+	samples: {},
+
+	init() {
+		this.types = [];
+		this.indices = [];
+		this.samples = {};
+	},
+
+	addIndex(index) {
+		this.indices.push(index);
+	},
+
+	addType(type) {
+		this.types.push(type);
+	},
+
+	addSample(index, type, document) {
+		if (!this.samples[index]) {
+			this.samples[index] = {};
+		}
+
+		this.samples[index][type] = document;
+	},
+
+	getMapping(client, cb) {
+		return new Promise((resolve, reject) => {
+			client.indices.getMapping({
+				index: this.indices,
+				type: this.types
+			})
+			.then(resolve)
+			.catch(reject);
+		});
+	}, 
+
+	getSchema(client, logger) {
+		return new Promise((resolve, reject) => {
+			this.getMapping(client).then((mapping) => {
+				try {
+					let schemas = {};
+					
+					for (let indexName in mapping) {
+						if (!schemas[indexName]) {
+							schemas[indexName] = {};
+						}
+
+						const index = mapping[indexName].mappings;
+
+						for (let typeName in index) {
+							
+							schemas[indexName][typeName] = {
+								$schema: "http://json-schema.org/draft-04/schema#",
+								type: "object",
+								additionalProperties: false,
+								properties: {}
+							};
+
+							const type = index[typeName];
+
+							schemas[indexName][typeName].properties = this.getFields(type.properties, this.samples[indexName][typeName]);
+						}
+					}
+
+					resolve(schemas);
+				} catch (e) {
+					reject(e);
+				}
+			}).catch((err) => {
+				reject(err);
+			});
+		});
+	},
+
+	getFields(properties, sample) {
+		let schema = {};
+
+		for (let fieldName in properties) {
+			schema[fieldName] = this.getField(properties[fieldName], sample[fieldName]);
+		}
+
+		return schema;
+	},
+
+	getField(fieldData, sample) {
+			let schema = {};
+
+			if (!fieldData) {
+				return schema;
+			}
+
+			if (fieldData.type) {
+				schema.type = fieldData.type;
+			}
+
+			if (fieldData.properties) {
+				schema.properties = this.getFields(fieldData.properties, sample);	
+			}
+
+			return schema;
+	},
+
+	getType(type, value) {
+		switch(type) {
+			case "long":
+			case "integer":
+			case "short":
+			case "byte":
+			case "double":
+			case "float":
+			case "half_float":
+			case "scaled_float":
+				return {
+					type: "number",
+					mode: type	
+				};
+			case "keyword":
+			case "text":
+				return {
+					type: "string"
+				};
+		}
+	},
+
+	getScalar(value) {
+		if (Array.isArray(value)) {
+			return 'array;'
+		} else {
+			return typeof value;
+		}
+	}
+};
