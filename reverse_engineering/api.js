@@ -166,13 +166,11 @@ module.exports = {
 		logger.log('info', getSamplingInfo(recordSamplingSettings, fieldInference), 'Reverse-Engineering sampling params', data.hiddenKeys);
 		logger.log('info', { Indices: indices }, 'Selected collection list', data.hiddenKeys);
 
-		SchemaCreator.init();
-
 		async.waterfall([
 			(getDbInfo) => {
 				this.connect(data, logger, getDbInfo);
 			},
-			(client, getData) => {
+			(client, getMapping) => {
 				client.info().then(info => {
 					const socket = getInfoSocket();
 					const modelInfo = {
@@ -184,16 +182,22 @@ module.exports = {
 
 					logger.log('info', { modelInfo }, 'Model info');
 
-					getData(null, client, modelInfo)
-				}).catch(() => getData(null, client));
+					getMapping(null, client, modelInfo)
+				}).catch(() => getMapping(null, client));
 			},
-			(client, modelInfo, next) => {
+
+			(client, modelInfo, getData) => {
+				getSchemaMapping(types, client).then((jsonSchemas) => {
+					getData(null, client, modelInfo, jsonSchemas);
+				}, (err) => {
+					logger.log('error', err, 'Error of getting schema');
+					getData(null, client, modelInfo, null);
+				});
+			},
+
+			(client, modelInfo, jsonSchemas, next) => {
 				async.map(indices, (indexName, nextIndex) => {
-					SchemaCreator.addIndex(indexName);
-
 					async.map(types[indexName], (typeName, nextType) => {
-						SchemaCreator.addType(typeName);
-
 						async.waterfall([
 							(getSampleDocSize) => {
 								client.count({
@@ -226,7 +230,8 @@ module.exports = {
 
 							(data, nextCallback) => {
 								let documents = data.hits.hits;
-
+								const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+								
 								let documentsPackage = {
 									dbName: indexName,
 									collectionName: typeName,
@@ -235,18 +240,25 @@ module.exports = {
 									bucketIndexes: [],
 									views: [],
 									validation: false,
-									emptyBucket: data.hits.hits.length === 0,
+									emptyBucket: documents.length === 0,
 									containetLevelKeys,
 									bucketInfo
 								};
 
-								const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+								const hasJsonSchema = jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings && jsonSchemas[indexName].mappings[typeName];
+
+								if (hasJsonSchema) {
+									documentsPackage.validation = {
+										jsonSchema: SchemaCreator.getSchema(
+											jsonSchemas[indexName].mappings[typeName],
+											documentTemplate
+										)
+									};
+								}
 
 								if (fieldInference.active === 'field') {
 									documentsPackage.documentTemplate = documentTemplate;
 								}
-
-								SchemaCreator.addSample(indexName, typeName, documentTemplate);
 
 								nextCallback(null, documentsPackage);
 							}
@@ -260,23 +272,15 @@ module.exports = {
 						}
 					});
 				}, (err, items) => {
-						next(err, items, modelInfo, client);
+						next(err, items, modelInfo);
 				});
 			}
-		], (err, items, modelInfo, client) => {
+		], (err, items, modelInfo) => {
 			if (err) {
 				logger.log('error', err);
 			}
-			SchemaCreator.getSchema(client, logger).then(schemas => {				
-				return schemas;
-			}, (error) => {
-				logger.log('error', error, 'Error of creating schema');
-				
-				return {};
-			}).then(schemas => {
-				logger.log('info', schemas, 'Created schemas');
-				cb(err, items, modelInfo);
-			});
+			
+			cb(err, items, modelInfo);
 		});
 	}
 };
@@ -337,4 +341,16 @@ function getInfoSocket() {
 			port: ""
 		}
 	}
+}
+
+function getSchemaMapping(indices, client) {
+	SchemaCreator.init();
+	for (let indexName in indices) {
+		SchemaCreator.addIndex(indexName);
+		for (let i in indices[indexName]) {
+			SchemaCreator.addType(indices[indexName][i]);
+		}
+	}
+
+	return SchemaCreator.getMapping(client);
 }

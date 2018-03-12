@@ -1,13 +1,29 @@
+const snippetsPath = "../snippets/";
+
+const snippets = {
+	"geoJSON": require(snippetsPath + "geopoint-geojson.json"),
+	"geo-bounding": require(snippetsPath + "geopoint-geo-bounding.json"),
+	"string": require(snippetsPath + "geopoint-string.json"),
+	"geohash": require(snippetsPath + "geopoint-geohash.json"),
+	"object": require(snippetsPath + "geopoint-object.json"),
+	"envelope": require(snippetsPath + "geoshape-envelope.json"),
+	"linestring": require(snippetsPath + "geoshape-linestring.json"),
+	"multipoint": require(snippetsPath + "geoshape-multipoint.json"),
+	"point": require(snippetsPath + "geoshape-point.json"),
+	"circle": require(snippetsPath + "geoshape-circle.json"),
+	"geometrycollection": require(snippetsPath + "geoshape-geometrycollection.json"),
+	"multilinestring": require(snippetsPath + "geoshape-multilinestring.json"),
+	"multipolygon": require(snippetsPath + "geoshape-multipolygon.json"),
+	"polygon": require(snippetsPath + "geoshape-polygon.json")
+};
 
 module.exports = {
 	indices: [],
 	types: [],
-	samples: {},
 
 	init() {
 		this.types = [];
 		this.indices = [];
-		this.samples = {};
 	},
 
 	addIndex(index) {
@@ -16,14 +32,6 @@ module.exports = {
 
 	addType(type) {
 		this.types.push(type);
-	},
-
-	addSample(index, type, document) {
-		if (!this.samples[index]) {
-			this.samples[index] = {};
-		}
-
-		this.samples[index][type] = document;
 	},
 
 	getMapping(client) {
@@ -39,45 +47,21 @@ module.exports = {
 
 	getSchemaTemplate() {
 		return {
-				$schema: "http://json-schema.org/draft-04/schema#",
-				type: "object",
-				additionalProperties: false,
-				properties: {
-					_index: { type: "string", mode: "text" },
-					_type: { type: "string", mode: "text" },
-					_id: { type: "string", mode: "text" },
-					_source: { type: "object", properties: {} }
-				}
-			};
+			$schema: "http://json-schema.org/draft-04/schema#",
+			type: "object",
+			additionalProperties: false,
+			properties: {}
+		};
 	},
 
-	getSchema(client) {
-		return new Promise((resolve, reject) => {
-			this.getMapping(client).then((mapping) => {
-				let schemas = {};
+	getSchema(elasticMapping, sample) {
+		let schema = this.getSchemaTemplate();
+		sample = sample || {};
 
-				for (let indexName in mapping) {
-					if (!schemas[indexName]) {
-						schemas[indexName] = {};
-					}
-					const index = mapping[indexName].mappings;
+		schema.properties = this.getServiceFields(sample);
+		schema.properties._source.properties = this.getFields(elasticMapping.properties, sample._source);
 
-					for (let typeName in index) {						
-						let currentSchema = this.getSchemaTemplate();
-						const type = index[typeName];
-						const currentSample = this.samples[indexName][typeName];
-
-						currentSchema.properties._source.properties = this.getFields(type.properties, currentSample._source);
-
-						schemas[indexName][typeName] = currentSchema;
-					}
-				}
-
-				resolve(schemas);
-			}).catch((err) => {
-				reject(err);
-			});
-		});
+		return schema;
 	},
 
 	getFields(properties, sample) {
@@ -98,26 +82,44 @@ module.exports = {
 			if (!fieldData) {
 				return schema;
 			}
+			const hasProperties = !!fieldData.properties;
 
-			schema = Object.assign(schema, this.getType(fieldData.type, sample));
+			schema = Object.assign(schema, this.getType(fieldData.type, sample, hasProperties));
+
+			let isArrayType = [
+				'nested',
+				'array',
+				'geo-point'
+			].indexOf(schema.type) !== -1;
 			
-			if (fieldData.properties) {
-				schema.properties = this.getFields(fieldData.properties, sample);						
+			if (hasProperties) {
+				let properties = this.getFields(fieldData.properties, sample);
+
+				if (isArrayType) {
+					schema.items = [properties];
+				} else {
+					schema.properties = properties;
+				}
 			}
 
-			if (Array.isArray(sample)) {
-				const arrayType = (schema.type === 'nested') ? schema.type : 'array';
-
+			if (Array.isArray(sample) && !isArrayType) {
 				schema = {
-					type: arrayType,
-					items: schema
+					type: 'array',
+					items: [schema]
 				};
+			}
+
+			if (schema.type === 'geo-shape') {
+				schema = this.handleSnippet(schema);
+			}
+			if (schema.type === 'geo-point') {
+				schema = this.handleSnippet(schema);
 			}
 
 			return schema;
 	},
 
-	getType(type, value) {
+	getType(type, value, hasProperties) {
 		switch(type) {
 			case "long":
 			case "integer":
@@ -149,11 +151,19 @@ module.exports = {
 			case "null":
 			case "boolean":
 			case "binary":
-			case "geo-point":
-			case "geo-shape":
 			case "nested":
 			case "date":
 				return { type };
+			case "geo_point":
+				return { 
+					type: "geo-point",
+					subType: this.getGeoPointSubtype(value)
+				};
+			case "geo_shape":
+				return { 
+					type: "geo-shape",
+					subType: this.getGeoShapeSubtype(value)
+				};
 			default:
 				if (value !== undefined) {
 					const scalar = this.getScalar(value);
@@ -165,13 +175,21 @@ module.exports = {
 							type: 'number',
 							mode: this.getNumberMode(value)
 						};
+					} else if (Array.isArray(value)) {
+						return {
+							type: 'array'
+						};
 					} else {
 						return {
 							type: scalar
 						};
 					}
 				} else {
-					return {};
+					if (hasProperties) {
+						return { type: "object" }
+					} else {
+						return {};
+					}
 				}
 		}
 	},
@@ -199,5 +217,118 @@ module.exports = {
 				return 'long';
 			}
 		}
+	},
+
+	getServiceFields(sample) {
+		let schema = {
+			_index: { type: "string", mode: "text" },
+			_type: { type: "string", mode: "text" },
+			_id: { type: "string", mode: "text" },
+			_source: { type: "object", properties: {} }
+		};
+
+		if (!sample) {
+			return schema;
+		}
+
+		for (let field in sample) {
+			const value = sample[field];
+
+			schema[field] = this.getType('', value, typeof value === 'object');
+		}
+
+		return schema;
+	},
+
+	getGeoPointSubtype(value) {
+		if (typeof value === "string") {
+			if (/\-?\d+\.\d+\,\-?\d+\.\d+/.test(value)) {
+				return "string";
+			} else {
+				return "geohash";
+			}
+		} else if (Array.isArray(value)) {
+			return "geoJSON";
+		} else if (typeof value === "object") {
+			if (value.top_left && value.bottom_right) {
+				return "geo-bounding";
+			}
+		}
+
+		return "object";
+	},
+
+	getGeoShapeSubtype(value) {
+		if (typeof value === "string") {
+			const isPoint = /^POINT\s*(.+)/i.test(value.trim());
+			const isLinestring = /^LINESTRING\s*(.+)/i.test(value.trim());
+			const isPolygon = /^POLYGON\s*(.+)/i.test(value.trim());
+			const isMultipoint = /^MULTIPOINT\s*(.+)/i.test(value.trim());
+			const isMultilinestring = /^MULTILINESTRING\s*(.+)/i.test(value.trim());
+			const isMultipolygon = /^MULTIPOLYGON\s*(.+)/i.test(value.trim());
+			const isGeometryCollection = /^GEOMETRYCOLLECTION\s*(.+)/i.test(value.trim());
+			const isEnvelope = /^BBOX\s*(.+)/i.test(value.trim());
+
+			if (isPoint) { return "point"; }
+			if (isLinestring) { return "linestring"; }
+			if (isPolygon) { return "polygon"; }
+			if (isMultipoint) { return "multipoint"; }
+			if (isMultilinestring) { return "multilinestring"; }
+			if (isMultipolygon) { return "multipolygon"; }
+			if (isGeometryCollection) { return "geometrycollection"; }
+			if (isEnvelope) { return "envelope"; }
+
+		} else if (typeof value === "object" && value.type) {
+			return value.type;
+		} else {
+			return "point";
+		}
+	},
+
+	handleSnippet(schema) {
+		const snippet = snippets[schema.subType];
+		if (snippet) {
+			if (snippet.parentType === 'array') {
+				schema.items = this.getSchemaFromSnippet(snippet);
+			} else {
+				schema.properties = this.getSchemaFromSnippet(snippet);
+			}
+		}
+
+		return schema;
+	},
+
+	getSchemaFromSnippet(snippet) {
+		const isArray = snippet.type === 'array' || snippet.parentType === 'array';
+		let schema = isArray ? [] : {};
+
+		for (let i in snippet.properties) {
+			const field = snippet.properties[i];
+			let currentSchema = {
+				type: field.type
+			};
+
+			if (field.properties) {
+				const properties = this.getSchemaFromSnippet(field);
+				
+				if (currentSchema.type === 'array') {
+					currentSchema.items = properties;
+				} else {
+					currentSchema.properties = properties;
+				}
+			}
+
+			if (field.sample) {
+				currentSchema.sample = field.sample;
+			}
+
+			if (isArray) {
+				schema.push(currentSchema);
+			} else {
+				schema[field.name] = currentSchema;
+			}
+		}
+
+		return schema;
 	}
 };
