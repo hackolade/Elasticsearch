@@ -20,10 +20,15 @@ const snippets = {
 module.exports = {
 	indices: [],
 	types: [],
+	logger: { log(type, ...data) { console[type](data); } },
 
 	init() {
 		this.types = [];
 		this.indices = [];
+	},
+
+	setLogger(logger) {
+		this.logger = logger;
 	},
 
 	addIndex(index) {
@@ -77,46 +82,45 @@ module.exports = {
 	},
 
 	getField(fieldData, sample) {
-			let schema = {};
-			
-			if (!fieldData) {
-				return schema;
-			}
-			const hasProperties = !!fieldData.properties;
-
-			schema = Object.assign(schema, this.getType(fieldData.type, sample, hasProperties));
-
-			let isArrayType = [
-				'nested',
-				'array',
-				'geo-point'
-			].indexOf(schema.type) !== -1;
-			
-			if (hasProperties) {
-				let properties = this.getFields(fieldData.properties, sample);
-
-				if (isArrayType) {
-					schema.items = [properties];
-				} else {
-					schema.properties = properties;
-				}
-			}
-
-			if (Array.isArray(sample) && !isArrayType) {
-				schema = {
-					type: 'array',
-					items: [schema]
-				};
-			}
-
-			if (schema.type === 'geo-shape') {
-				schema = this.handleSnippet(schema);
-			}
-			if (schema.type === 'geo-point') {
-				schema = this.handleSnippet(schema);
-			}
-
+		let schema = {};
+		
+		if (!fieldData) {
 			return schema;
+		}
+		const hasProperties = !!fieldData.properties;
+
+		schema = Object.assign(schema, this.getType(fieldData.type, sample, hasProperties));
+
+		let isArrayType = [
+			'nested',
+			'array',
+			'geo-point'
+		].indexOf(schema.type) !== -1;
+
+		if (hasProperties) {
+			let properties = this.getFields(fieldData.properties, sample);
+
+			if (isArrayType) {
+				schema.items = [properties];
+			} else {
+				schema.properties = properties;
+			}
+		}
+
+		if (Array.isArray(sample) && !isArrayType) {
+			schema = {
+				type: 'array',
+				items: [schema]
+			};
+		}
+
+		if (schema.type === 'geo-shape' || schema.type === 'geo-point') {
+			schema = this.handleSnippet(schema);
+		}
+
+		schema = this.setProperties(schema, fieldData);
+
+		return schema;
 	},
 
 	getType(type, value, hasProperties) {
@@ -330,5 +334,105 @@ module.exports = {
 		}
 
 		return schema;
+	},
+
+	setProperties(schema, fieldData) {
+		console.log(schema, fieldData);
+		if (schema.type === "string") {
+			this.setStringProperties(schema, fieldData);
+		} else if (schema.type === "number") {
+			this.setNumberProperties(schema, fieldData);
+		} else if (schema.type === "boolean") {
+			this.setBooleanProperties(schema, fieldData);
+		} else if (schema.type === "date") {
+			this.setDateProperties(schema, fieldData);
+		} else if (schema.type === "binary") {
+			this.setBinaryProperties(schema, fieldData);
+		} else if (schema.type === "range") {
+			this.setRangeProperties(schema, fieldData);
+		}
+
+		return schema;
+	},
+
+	setStringProperties(schema, fieldData) {
+		this.setProperty("boost", schema, fieldData)
+			.setProperty("eager_global_ordinals", schema, fieldData)
+			.setProperty("index", schema, fieldData)
+			.setProperty("index_options", schema, fieldData)
+			.setProperty("norms", schema, fieldData)
+			.setProperty("store", schema, fieldData)
+			.setProperty("similarity", schema, fieldData)
+			.setProperty("ignore_above", schema, fieldData)
+			.setProperty("doc_values", schema, fieldData)
+			.setProperty("index_options", schema, fieldData)
+			.setProperty("include_in_all", schema, fieldData)
+			.setProperty("null_value", schema, fieldData);
+
+		if (fieldData["fields"]) {
+			schema["stringfields"] = JSON.stringify(fieldData["fields"], null, 4);
+		}
+
+		return schema;
+	},
+
+	setNumberProperties(schema, fieldData) {
+		this.setProperty("coerce", schema, fieldData)
+			.setProperty("boost", schema, fieldData)
+			.setProperty("doc_values", schema, fieldData)
+			.setProperty("ignore_malformed", schema, fieldData)
+			.setProperty("index", schema, fieldData)
+			.setProperty("null_value", schema, fieldData)
+			.setProperty("store", schema, fieldData)
+			.setProperty("scaling_factor", schema, fieldData);
+
+		return schema;
+	},
+
+	setDateProperties(schema, fieldData) {
+		this.setProperty("boost", schema, fieldData)
+			.setProperty("doc_values", schema, fieldData)
+			.setProperty("format", schema, fieldData)
+			.setProperty("locale", schema, fieldData)
+			.setProperty("ignore_malformed", schema, fieldData)
+			.setProperty("index", schema, fieldData)
+			.setProperty("null_value", schema, fieldData)
+			.setProperty("store", schema, fieldData);
+
+		return schema;
+	},
+
+	setBooleanProperties(schema, fieldData) {
+		this.setProperty("boost", schema, fieldData)
+			.setProperty("doc_values", schema, fieldData)
+			.setProperty("index", schema, fieldData)
+			.setProperty("null_value", schema, fieldData)
+			.setProperty("store", schema, fieldData);
+
+		return schema;
+	},
+
+	setBinaryProperties(schema, fieldData) {
+		this.setProperty("doc_values", schema, fieldData)
+			.setProperty("store", schema, fieldData);
+
+		return schema;
+	},
+
+	setRangeProperties(schema, fieldData) {
+		this.setProperty("coerce", schema, fieldData)
+			.setProperty("boost", schema, fieldData)
+			.setProperty("index", schema, fieldData)
+			.setProperty("store", schema, fieldData);
+
+		return schema;
+	},
+
+	setProperty(propertyName, schema, source) {
+		if (Object.prototype.hasOwnProperty.call(source, propertyName)) {
+			schema[propertyName] = source[propertyName];
+		}
+
+		return this;
 	}
 };
