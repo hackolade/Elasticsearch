@@ -27,7 +27,7 @@
 		"features": {
 			"nestedCollections": true,
 			"disableMultipleTypes": true,
-			"disableReverseEngineering": true
+			"enableReverseEngineering": true
 		}
 	},
 	"description": "Hackolade plugin for Elasticsearch"

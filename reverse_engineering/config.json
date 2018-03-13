@@ -3,5 +3,6 @@
 		"NO_DATABASES": "There is no databases in Elasticsearch instance",
 		"WRONG_CONNECTION": "Can not connect to Elasticsearch instance"
 	},
+	"scenario": "connectToDB",
 	"excludeDocKind": ["id"]
 }
