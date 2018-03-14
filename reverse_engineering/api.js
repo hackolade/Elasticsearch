@@ -10,6 +10,7 @@ const versions = require('../package.json').contributes.target.versions;
 const MAX_DOCUMENTS = 30000;
 
 let connectionParams = {};
+let saveConnectionInfo = {};
 
 let _client = null;
 
@@ -71,7 +72,7 @@ module.exports = {
 			_client = null;
 		}
 		connectionParams = {};
-		cb()
+		cb();
 	},
 
 	testConnection: function(connectionInfo, logger, cb){
@@ -82,6 +83,7 @@ module.exports = {
 				connection.ping({
 					requestTimeout: 5000
 				}, (error, success) => {
+					this.disconnect(connectionInfo, logger, () => {});
 					if (error) {
 						logger.log('error', error, 'Test connection', connectionInfo.hiddenKeys);
 					}
@@ -104,6 +106,7 @@ module.exports = {
 			if (err) {
 				logger.log('error', err);
 				cb(err);
+					this.disconnect(connectionInfo, logger, () => {});
 				return;
 			}
 			
@@ -278,6 +281,7 @@ module.exports = {
 		], (err, items, modelInfo) => {
 			if (err) {
 				logger.log('error', err);
+				this.disconnect(connectionInfo, logger, () => {});
 			}
 			
 			cb(err, items, modelInfo);
