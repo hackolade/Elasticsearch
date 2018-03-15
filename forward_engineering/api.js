@@ -3,11 +3,7 @@ const async = require('async');
 
 module.exports = {
 	generateScript(data, logger, cb) {
-		logger.clear();
-		logger.log('info', '', 'Start forward engineering of ElastiSearch Target');
 		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
-		logger.log('info', data, 'Start creation Elasticsearch script');
-		
 		let result = "";
 
 		result += this.getHTTPString(modelData, containerData);
