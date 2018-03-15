@@ -101,7 +101,10 @@ module.exports = {
 			let properties = this.getFields(fieldData.properties, sample);
 
 			if (isArrayType) {
-				schema.items = [properties];
+				schema.items = [{
+					type: 'object',
+					properties
+				}];
 			} else {
 				schema.properties = properties;
 			}
