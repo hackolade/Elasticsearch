@@ -340,7 +340,6 @@ module.exports = {
 	},
 
 	setProperties(schema, fieldData) {
-		console.log(schema, fieldData);
 		if (schema.type === "string") {
 			this.setStringProperties(schema, fieldData);
 		} else if (schema.type === "number") {
@@ -368,7 +367,6 @@ module.exports = {
 			.setProperty("similarity", schema, fieldData)
 			.setProperty("ignore_above", schema, fieldData)
 			.setProperty("doc_values", schema, fieldData)
-			.setProperty("index_options", schema, fieldData)
 			.setProperty("include_in_all", schema, fieldData)
 			.setProperty("null_value", schema, fieldData);
 

@@ -8,6 +8,7 @@
 	"MAIN_MENU___INSERT_FIELD": "Insert Field",
 	"MAIN_MENU___APPEND_FIELD": "Append Field",
 	"MAIN_MENU___REVERSE_DB_COLLECTIONS": "Elasticsearch indices...",
+	"MAIN_MENU___FORWARD_DB_COLLECTIONS": "CURL Script",
 	"TOOLBAR___ADD_BUCKET": "Add index",
 	"TOOLBAR___ADD_COLLECTION": "Add type",
 	"TOOLBAR___ADD_VIEW": "Add Filtered Alias",
@@ -137,5 +138,6 @@
 	"CONTEXT_MENU___GO_TO_DEFINITION": "Go to User-Defined Type",
 	"DOCUMENTATION___DB_DEFINITIONS": "User-Defined Types",
 	"CONTEXT_MENU___CONVERT_TO_PATTERN_FIELD": "Convert to Pattern Field",
-	"CONTEXT_MENU___CONVERT_PATTERN_TO_REGULAR_FIELD": "Convert to Regular Field"
+	"CONTEXT_MENU___CONVERT_PATTERN_TO_REGULAR_FIELD": "Convert to Regular Field",
+	"CENTRAL_PANE___FE_SCRIPT": "CURL Script"
 }
