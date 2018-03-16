@@ -30,7 +30,7 @@ module.exports = {
 	getKibanaScript(mapping, indexData) {
 		const indexName = indexData.name || "";
 
-		return `PUT /${indexName}\n${JSON.stringify(mapping, null, 4)}`;
+		return `PUT /${indexName.toLowerCase()}\n${JSON.stringify(mapping, null, 4)}`;
 	},
 
 	getMappingScript(jsonSchema) {
