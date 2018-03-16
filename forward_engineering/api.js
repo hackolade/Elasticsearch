@@ -2,8 +2,6 @@ module.exports = {
 	generateScript(data, logger, cb) {
 		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
 		let result = "";
-		result += this.getHTTPString(modelData, containerData);
-
 		let mappingScript = {
 			mappings: {
 				[entityData.collectionName.toLowerCase()]: {
@@ -12,17 +10,27 @@ module.exports = {
 			}
 		};
 
-		result += '\'\n' + JSON.stringify(mappingScript, null, 4) + '\n\'';
+		if (isUpdateScript) {
+			result = this.getCurlScript(mappingScript, modelData, containerData);
+		} else {
+			result += this.getKibanaScript(mappingScript, containerData);
+		}
 
 		cb(null, result);
 	},
 
-	getHTTPString(modelData, indexData) {
+	getCurlScript(mapping, modelData, indexData) {
 		const host = modelData.host || 'localhost';
 		const port = modelData.port || 9200;
 		const indexName = indexData.name || "";
 
-		return `curl -XPUT '${host}:${port}/${indexName.toLowerCase()}?pretty' -H 'Content-Type: application/json' -d `;
+		return `curl -XPUT '${host}:${port}/${indexName.toLowerCase()}?pretty' -H 'Content-Type: application/json' -d '\n${JSON.stringify(mapping, null, 4)}\n'`;
+	},
+
+	getKibanaScript(mapping, indexData) {
+		const indexName = indexData.name || "";
+
+		return `PUT /${indexName}\n${JSON.stringify(mapping, null, 4)}`;
 	},
 
 	getMappingScript(jsonSchema) {
