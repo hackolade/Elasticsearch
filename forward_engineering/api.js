@@ -1,11 +1,7 @@
-const _ = require('lodash');
-const async = require('async');
-
 module.exports = {
 	generateScript(data, logger, cb) {
 		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
 		let result = "";
-
 		result += this.getHTTPString(modelData, containerData);
 
 		let mappingScript = {
