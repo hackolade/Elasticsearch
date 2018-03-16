@@ -5,6 +5,7 @@
 	"parentType": "array",
 	"sample": ["sample"],
 	"useSample": true,
+	"default": true,
 	"defaultValues": {
 		"properties": [],
 		"primaryKey": false,
