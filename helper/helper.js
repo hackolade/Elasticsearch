@@ -21,14 +21,14 @@ module.exports = {
 		}).map(property => property.propertyKeyword);
 	},
 
-	getFieldProperties(type, data, pseudonames) {
+	getFieldProperties(type, data, pseudonyms) {
 		const propertyNames = this.getTargetFieldLevelPropertyNames(type, data);
 
 		return propertyNames.reduce((result, propertyName) => {
 			if (Object.prototype.hasOwnProperty.call(data, propertyName)) {
 				result[propertyName] = data[propertyName];
-			} else if (Object.prototype.hasOwnProperty.call(data, pseudonames[propertyName])) {
-				result[pseudonames[propertyName]] = data[pseudonames[propertyName]];
+			} else if (Object.prototype.hasOwnProperty.call(data, pseudonyms[propertyName])) {
+				result[pseudonyms[propertyName]] = data[pseudonyms[propertyName]];
 			}
 
 			return result;
