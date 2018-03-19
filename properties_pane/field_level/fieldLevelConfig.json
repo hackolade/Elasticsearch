@@ -111,7 +111,8 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyTooltip": "Popup for fields entry",
 				"propertyType": "details",
-				"template": "textarea"
+				"template": "textarea",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "boost",
@@ -119,19 +120,26 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "numeric",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"dependency": {
+					"key": "mode",
+					"value": "keyword"
+				},
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "eager_global_ordinals",
 				"propertyKeyword": "eager_global_ordinals",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "ignore_above",
@@ -139,19 +147,26 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "numeric",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"dependency": {
+					"key": "mode",
+					"value": "keyword"
+				},
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "index_options",
@@ -164,25 +179,53 @@ making sure that you maintain a proper JSON format.
 					"freqs",
 					"positions",
 					"offsets"
-				]
+				],
+				"dependency": {
+					"key": "mode",
+					"value": "text"
+				},
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "index_options",
+				"propertyKeyword": "index_options",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of parameter controls for information is added to the inverted index, for search and highlighting purposes",
+				"propertyType": "select",
+				"options": [
+					"docs",
+					"freqs"
+				],
+				"dependency": {
+					"key": "mode",
+					"value": "keyword"
+				},
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "norms",
 				"propertyKeyword": "norms",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "null_value",
 				"propertyKeyword": "null_value",
 				"propertyValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"dependency": {
+					"key": "mode",
+					"value": "keyword"
+				},
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "similarity",
@@ -194,13 +237,19 @@ making sure that you maintain a proper JSON format.
 					"BM25",
 					"classic",
 					"boolean"
-				]
+				],
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "normalizer",
 				"propertyKeyword": "normalizer",
 				"propertyValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"dependency": {
+					"key": "mode",
+					"value": "keyword"
+				},
+				"isTargetProperty": true
 			},
 			"minLength",
 			"maxLength",
@@ -244,7 +293,8 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "coerce",
 				"propertyKeyword": "coerce",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "boost",
@@ -252,43 +302,50 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "numeric",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "ignore_malformed",
 				"propertyKeyword": "ignore_malformed",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "null_value",
 				"propertyKeyword": "null_value",
 				"propertyValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "scaling_factor",
@@ -296,7 +353,12 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "numeric",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"dependency": {
+					"key": "mode",
+					"value": "scaled_float"
+				},
+				"isTargetProperty": true
 			},	
 			"unit",
 			"minimum",
@@ -323,55 +385,64 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "numeric",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "format",
 				"propertyKeyword": "format",
 				"shouldValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "locale",
 				"propertyKeyword": "locale",
 				"shouldValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "ignore_malformed",
 				"propertyKeyword": "ignore_malformed",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "null_value",
 				"propertyKeyword": "null_value",
 				"propertyValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			"sample",
 			"comments"
@@ -390,31 +461,36 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "numeric",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "null_value",
 				"propertyKeyword": "null_value",
 				"propertyValidate": false,
-				"propertyType": "text"
+				"propertyType": "text",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			"sample",
 			"comments"
@@ -430,13 +506,15 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			"comments"
 		],
@@ -458,13 +536,15 @@ making sure that you maintain a proper JSON format.
 					"long_range",
 					"double_range",
 					"date_range"
-				]
+				],
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "coerce",
 				"propertyKeyword": "coerce",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "boost",
@@ -472,19 +552,22 @@ making sure that you maintain a proper JSON format.
 				"propertyValidate": false,
 				"propertyType": "text",
 				"valueType": "number",
-				"allowNegative": false
+				"allowNegative": false,
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,
-				"propertyType": "checkbox"
+				"propertyType": "checkbox",
+				"isTargetProperty": true
 			},
 			"minProperties",
 			"maxProperties",
