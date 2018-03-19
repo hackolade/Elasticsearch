@@ -17,6 +17,8 @@ const snippets = {
 	"polygon": require(snippetsPath + "geoshape-polygon.json")
 };
 
+const helper = require('../helper/helper');
+
 module.exports = {
 	indices: [],
 	types: [],
@@ -340,100 +342,16 @@ module.exports = {
 	},
 
 	setProperties(schema, fieldData) {
-		if (schema.type === "string") {
-			this.setStringProperties(schema, fieldData);
-		} else if (schema.type === "number") {
-			this.setNumberProperties(schema, fieldData);
-		} else if (schema.type === "boolean") {
-			this.setBooleanProperties(schema, fieldData);
-		} else if (schema.type === "date") {
-			this.setDateProperties(schema, fieldData);
-		} else if (schema.type === "binary") {
-			this.setBinaryProperties(schema, fieldData);
-		} else if (schema.type === "range") {
-			this.setRangeProperties(schema, fieldData);
+		const properties = helper.getFieldProperties(schema.type, Object.assign({mode: fieldData.type}, fieldData), { "stringfields": "fields" });
+
+		for (let propName in properties) {
+			if (propName === 'fields') {
+				schema["stringfields"] = JSON.stringify(properties[propName], null, 4);
+			} else {
+				schema[propName] = properties[propName];
+			}
 		}
 
 		return schema;
-	},
-
-	setStringProperties(schema, fieldData) {
-		this.setProperty("boost", schema, fieldData)
-			.setProperty("eager_global_ordinals", schema, fieldData)
-			.setProperty("index", schema, fieldData)
-			.setProperty("index_options", schema, fieldData)
-			.setProperty("norms", schema, fieldData)
-			.setProperty("store", schema, fieldData)
-			.setProperty("similarity", schema, fieldData)
-			.setProperty("ignore_above", schema, fieldData)
-			.setProperty("doc_values", schema, fieldData)
-			.setProperty("include_in_all", schema, fieldData)
-			.setProperty("null_value", schema, fieldData);
-
-		if (fieldData["fields"]) {
-			schema["stringfields"] = JSON.stringify(fieldData["fields"], null, 4);
-		}
-
-		return schema;
-	},
-
-	setNumberProperties(schema, fieldData) {
-		this.setProperty("coerce", schema, fieldData)
-			.setProperty("boost", schema, fieldData)
-			.setProperty("doc_values", schema, fieldData)
-			.setProperty("ignore_malformed", schema, fieldData)
-			.setProperty("index", schema, fieldData)
-			.setProperty("null_value", schema, fieldData)
-			.setProperty("store", schema, fieldData)
-			.setProperty("scaling_factor", schema, fieldData);
-
-		return schema;
-	},
-
-	setDateProperties(schema, fieldData) {
-		this.setProperty("boost", schema, fieldData)
-			.setProperty("doc_values", schema, fieldData)
-			.setProperty("format", schema, fieldData)
-			.setProperty("locale", schema, fieldData)
-			.setProperty("ignore_malformed", schema, fieldData)
-			.setProperty("index", schema, fieldData)
-			.setProperty("null_value", schema, fieldData)
-			.setProperty("store", schema, fieldData);
-
-		return schema;
-	},
-
-	setBooleanProperties(schema, fieldData) {
-		this.setProperty("boost", schema, fieldData)
-			.setProperty("doc_values", schema, fieldData)
-			.setProperty("index", schema, fieldData)
-			.setProperty("null_value", schema, fieldData)
-			.setProperty("store", schema, fieldData);
-
-		return schema;
-	},
-
-	setBinaryProperties(schema, fieldData) {
-		this.setProperty("doc_values", schema, fieldData)
-			.setProperty("store", schema, fieldData);
-
-		return schema;
-	},
-
-	setRangeProperties(schema, fieldData) {
-		this.setProperty("coerce", schema, fieldData)
-			.setProperty("boost", schema, fieldData)
-			.setProperty("index", schema, fieldData)
-			.setProperty("store", schema, fieldData);
-
-		return schema;
-	},
-
-	setProperty(propertyName, schema, source) {
-		if (Object.prototype.hasOwnProperty.call(source, propertyName)) {
-			schema[propertyName] = source[propertyName];
-		}
-
-		return this;
 	}
 };

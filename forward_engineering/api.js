@@ -61,7 +61,7 @@ module.exports = {
 
 	getField(field) {
 		let schema = {};
-		const fieldProperties = helper.getFieldProperties(field);
+		const fieldProperties = helper.getFieldProperties(field.type, field, {});
 		let type = this.getFieldType(field);
 
 		if (type !== 'object' && type !== 'array') {
