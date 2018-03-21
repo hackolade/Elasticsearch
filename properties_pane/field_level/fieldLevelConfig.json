@@ -234,6 +234,7 @@ making sure that you maintain a proper JSON format.
 				"propertyTooltip": "Select from list of scoring algorithm or similarity per field",
 				"propertyType": "select",
 				"options": [
+					"",
 					"BM25",
 					"classic",
 					"boolean"
