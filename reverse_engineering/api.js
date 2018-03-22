@@ -159,7 +159,7 @@ module.exports = {
 			sourceType: 'object'
 		};
 
-		const containetLevelKeys = {
+		const containerLevelKeys = {
 			index: '_index',
 			docType: '_type',
 			docID: '_id',
@@ -244,7 +244,7 @@ module.exports = {
 									views: [],
 									validation: false,
 									emptyBucket: documents.length === 0,
-									containetLevelKeys,
+									containerLevelKeys,
 									bucketInfo
 								};
 
