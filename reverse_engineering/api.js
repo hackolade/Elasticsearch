@@ -282,7 +282,27 @@ module.exports = {
 							if (err) {
 								nextIndex(err, typeData);
 							} else {
-								const filterData = typeData.filter(docPackage => docPackage.documents.length !== 0 || docPackage.validation || includeEmptyCollection);
+								const filterData = typeData.filter(docPackage => {
+									if (!includeEmptyCollection) {
+										if (
+											docPackage.documents.length === 0
+											&&
+											docPackage.validation 
+											&& 
+											docPackage.validation.jsonSchema 
+											&& 
+											docPackage.validation.jsonSchema.properties 
+											&&
+											docPackage.validation.jsonSchema.properties._source
+											&& 
+											_.isEmpty(docPackage.validation.jsonSchema.properties._source.properties)
+										) {
+											return false;
+										}
+									}
+									
+									return true;
+								});
 								nextIndex(null, filterData);
 							}
 						});
