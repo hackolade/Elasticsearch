@@ -25,7 +25,6 @@
 			]
 		},
 		"features": {
-			"nestedCollections": true,
 			"disableMultipleTypes": true,
 			"enableReverseEngineering": true,
 			"enableForwardEngineering": true
