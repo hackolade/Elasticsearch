@@ -200,80 +200,113 @@ module.exports = {
 
 			(client, modelInfo, jsonSchemas, next) => {
 				async.map(indices, (indexName, nextIndex) => {
-					async.map(types[indexName], (typeName, nextType) => {
-						async.waterfall([
-							(getSampleDocSize) => {
-								client.count({
-									index: indexName,
-									type: typeName
-								}, (err, response) => {
-									getSampleDocSize(err, response);
-								});
-							},
-							
-							(response, searchData) => {
-								const per = recordSamplingSettings.relative.value;
-								const size = (recordSamplingSettings.active === 'absolute')
-									? recordSamplingSettings.absolute.value
-									: Math.round(response.count / 100 * per);
-								const count = size > MAX_DOCUMENTS ? MAX_DOCUMENTS : size;
-
-								searchData(null, count);
-							},
-
-							(size, getTypeData) => {
-								client.search({
-									index: indexName,
-									type: typeName,
-									size
-								}, (err, data) => {
-									getTypeData(err, data);
-								});
-							},
-
-							(data, nextCallback) => {
-								let documents = data.hits.hits;
-								const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
-								
-								let documentsPackage = {
-									dbName: indexName,
-									collectionName: typeName,
-									documents,
-									indexes: [],
-									bucketIndexes: [],
-									views: [],
-									validation: false,
-									emptyBucket: documents.length === 0,
-									containerLevelKeys,
-									bucketInfo
-								};
-
-								const hasJsonSchema = jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings && jsonSchemas[indexName].mappings[typeName];
-
-								if (hasJsonSchema) {
-									documentsPackage.validation = {
-										jsonSchema: SchemaCreator.getSchema(
-											jsonSchemas[indexName].mappings[typeName],
-											documentTemplate
-										)
-									};
-								}
-
-								if (fieldInference.active === 'field') {
-									documentsPackage.documentTemplate = documentTemplate;
-								}
-
-								nextCallback(null, documentsPackage);
-							}
-						], nextType);
-					}, (err, typeData) => {
-						if (err) {
-							nextIndex(err, typeData);
+					if (!types[indexName]) {
+						if (includeEmptyCollection) {
+							nextIndex(null, [{
+								dbName: indexName,
+								emptyBucket: true,
+								containerLevelKeys,
+								bucketInfo
+							}]);
 						} else {
-							const filterData = typeData.filter(docPackage => docPackage.documents.length !== 0 || includeEmptyCollection);
-							nextIndex(null, filterData);
+							nextIndex(null, [{}]);
 						}
-					});
+					} else {
+						async.map(types[indexName], (typeName, nextType) => {
+							async.waterfall([
+								(getSampleDocSize) => {
+									client.count({
+										index: indexName,
+										type: typeName
+									}, (err, response) => {
+										getSampleDocSize(err, response);
+									});
+								},
+								
+								(response, searchData) => {
+									const per = recordSamplingSettings.relative.value;
+									const size = (recordSamplingSettings.active === 'absolute')
+										? recordSamplingSettings.absolute.value
+										: Math.round(response.count / 100 * per);
+									const count = size > MAX_DOCUMENTS ? MAX_DOCUMENTS : size;
+
+									searchData(null, count);
+								},
+
+								(size, getTypeData) => {
+									client.search({
+										index: indexName,
+										type: typeName,
+										size
+									}, (err, data) => {
+										getTypeData(err, data);
+									});
+								},
+
+								(data, nextCallback) => {
+									let documents = data.hits.hits;
+									const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+									
+									let documentsPackage = {
+										dbName: indexName,
+										collectionName: typeName,
+										documents,
+										indexes: [],
+										bucketIndexes: [],
+										views: [],
+										validation: false,
+										emptyBucket: false,
+										containerLevelKeys,
+										bucketInfo
+									};
+
+									const hasJsonSchema = jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings && jsonSchemas[indexName].mappings[typeName];
+
+									if (hasJsonSchema) {
+										documentsPackage.validation = {
+											jsonSchema: SchemaCreator.getSchema(
+												jsonSchemas[indexName].mappings[typeName],
+												documentTemplate
+											)
+										};
+									}
+
+									if (fieldInference.active === 'field') {
+										documentsPackage.documentTemplate = documentTemplate;
+									}
+
+									nextCallback(null, documentsPackage);
+								}
+							], nextType);
+						}, (err, typeData) => {
+							if (err) {
+								nextIndex(err, typeData);
+							} else {
+								const filterData = typeData.filter(docPackage => {
+									if (!includeEmptyCollection) {
+										if (
+											docPackage.documents.length === 0
+											&&
+											docPackage.validation 
+											&& 
+											docPackage.validation.jsonSchema 
+											&& 
+											docPackage.validation.jsonSchema.properties 
+											&&
+											docPackage.validation.jsonSchema.properties._source
+											&& 
+											_.isEmpty(docPackage.validation.jsonSchema.properties._source.properties)
+										) {
+											return false;
+										}
+									}
+									
+									return true;
+								});
+								nextIndex(null, filterData);
+							}
+						});
+					}
 				}, (err, items) => {
 						next(err, items, modelInfo);
 				});
