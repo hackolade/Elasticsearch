@@ -3,6 +3,7 @@
 	"erdAbbreviation": "<str>",
 	"dtdAbbreviation": "{ABC}",
 	"useSample": true,
+	"default": true,
 	"defaultValues": {
 		"minLength": "",
 		"maxLength": "",
@@ -18,6 +19,6 @@
 		"sample": "",
 		"mode": "text",
 		"index_options": "docs",
-		"similarity": "BM25"
+		"similarity": ""
 	}
 }

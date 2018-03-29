@@ -1,10 +1,10 @@
 {
 	"name": "Elasticsearch",
-	"version": "0.1.4",
-	"versionDate": "2018-02-25",
+	"version": "0.1.5",
+	"versionDate": "2018-03-29",
 	"author": "hackolade",
 	"engines": {
-		"hackolade": "1.9.x",
+		"hackolade": "1.12.7",
 		"hackoladePlugin": "1.0.0"
 	},
 	"contributes": {
@@ -21,12 +21,15 @@
 				"5.4.x",
 				"5.5.x",
 				"5.6.x",
-				"6.0.x"
+				"6.0.x",
+				"6.1.x",
+				"6.2.x"
 			]
 		},
 		"features": {
-			"nestedCollections": true,
-			"disableMultipleTypes": true
+			"disableMultipleTypes": true,
+			"enableReverseEngineering": true,
+			"enableForwardEngineering": true
 		}
 	},
 	"description": "Hackolade plugin for Elasticsearch"

@@ -3,8 +3,9 @@
 	"erdAbbreviation": "<arr>",
 	"dtdAbbreviation": "[...]",
 	"parentType": "array",
-	"sample": ["sample"],
+	"sample": [],
 	"useSample": true,
+	"default": true,
 	"defaultValues": {
 		"properties": [],
 		"primaryKey": false,

@@ -3,7 +3,7 @@
 	"erdAbbreviation": "<nest>",
 	"dtdAbbreviation": "[...]",
 	"parentType": "array",
-	"sample": ["sample"],
+	"sample": [],
 	"useSample": true,
 	"defaultValues": {
 		"childValueType": "object",
