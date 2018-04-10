@@ -6,9 +6,7 @@ module.exports = {
 		let result = "";
 		let fieldsSchema = this.getFieldsSchema(JSON.parse(jsonSchema));
 		let typeSchema = this.getTypeSchema(entityData, fieldsSchema);
-		let mappingScript = {
-			mappings: typeSchema
-		};
+		let mappingScript = this.getMappingScript(containerData, typeSchema);
 
 		if (isUpdateScript) {
 			result = this.getCurlScript(mappingScript, modelData, containerData);
@@ -135,5 +133,35 @@ module.exports = {
 		return {
 			[(typeData.collectionName || "").toLowerCase()]: script
 		};
+	},
+
+	getMappingScript(indexData, typeSchema) {
+		let mappingScript = {};
+		let settings = this.getSettings(indexData);
+
+		if (settings) {
+			mappingScript.settings = settings;
+		}
+
+		mappingScript.mappings = typeSchema;
+
+		return mappingScript;
+	},
+
+	getSettings(indexData) {
+		let settings;
+		let properties = helper.getContainerLevelProperties();
+		
+		properties.forEach(propertyName => {
+			if (indexData[propertyName]) {
+				if (!settings) {
+					settings = {};
+				}
+
+				settings[propertyName] = indexData[propertyName];
+			}
+		});
+
+		return settings;
 	}
 };

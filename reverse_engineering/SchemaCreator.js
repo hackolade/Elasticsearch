@@ -52,6 +52,12 @@ module.exports = {
 		});
 	},
 
+	getSettings(client) {
+		return client.indices.getSettings({
+			index: this.indices
+		});
+	},
+
 	getSchemaTemplate() {
 		return {
 			$schema: "http://json-schema.org/draft-04/schema#",

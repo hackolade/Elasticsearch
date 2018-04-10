@@ -1,6 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const fieldLevelConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../properties_pane/field_level/fieldLevelConfig.json')).toString().replace(/\/\*[.\s\S]*\*\//ig, ""));
+const readConfig = (pathToConfig) => {
+	return JSON.parse(fs.readFileSync(path.join(__dirname, pathToConfig)).toString().replace(/\/\*[.\s\S]*\*\//ig, ""));
+};
+const fieldLevelConfig = readConfig('../properties_pane/field_level/fieldLevelConfig.json');
+const containerLevelConfig = readConfig('../properties_pane/container_level/containerLevelConfig.json');
 
 module.exports = {
 	getTargetFieldLevelPropertyNames(type, data) {
@@ -33,5 +37,19 @@ module.exports = {
 
 			return result;
 		}, {});
+	},
+
+	getContainerLevelProperties() {
+		let properties = [];
+
+		containerLevelConfig.forEach((tab) => {
+			tab.structure.forEach(property => {
+				if (property.isTargetProperty) {
+					properties.push(property.propertyKeyword);
+				}
+			});
+		});
+
+		return properties;
 	}
 };

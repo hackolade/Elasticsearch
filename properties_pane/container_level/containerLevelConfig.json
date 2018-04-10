@@ -139,6 +139,24 @@ making sure that you maintain a proper JSON format.
 		}],
 		"structure": [
 			{
+				"propertyName": "Number of shards",
+				"propertyKeyword": "number_of_shards",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "integer",
+				"allowNegative": false,
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "Number of replicas",
+				"propertyKeyword": "number_of_replicas",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "integer",
+				"allowNegative": false,
+				"isTargetProperty": true
+			},
+			{
 				"propertyName": "Description",
 				"propertyKeyword": "description",
 				"shouldValidate": false,
