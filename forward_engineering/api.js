@@ -4,12 +4,10 @@ module.exports = {
 	generateScript(data, logger, cb) {
 		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
 		let result = "";
+		let fieldsSchema = this.getFieldsSchema(JSON.parse(jsonSchema));
+		let typeSchema = this.getTypeSchema(entityData, fieldsSchema);
 		let mappingScript = {
-			mappings: {
-				[entityData.collectionName.toLowerCase()]: {
-					properties: this.getMappingScript(JSON.parse(jsonSchema))
-				}
-			}
+			mappings: typeSchema
 		};
 
 		if (isUpdateScript) {
@@ -35,7 +33,7 @@ module.exports = {
 		return `PUT /${indexName.toLowerCase()}\n${JSON.stringify(mapping, null, 4)}`;
 	},
 
-	getMappingScript(jsonSchema) {
+	getFieldsSchema(jsonSchema) {
 		let schema = {};
 
 		if (!(jsonSchema.properties && jsonSchema.properties._source && jsonSchema.properties._source.properties)) {
@@ -123,5 +121,19 @@ module.exports = {
 		}
 
 		return schema;
+	},
+
+	getTypeSchema(typeData, fieldsSchema) {
+		let script = {};
+
+		if (typeData.dynamic) {
+			script.dynamic = typeData.dynamic;
+		}
+
+		script.properties = fieldsSchema;
+
+		return {
+			[(typeData.collectionName || "").toLowerCase()]: script
+		};
 	}
 };

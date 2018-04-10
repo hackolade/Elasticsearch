@@ -12,7 +12,8 @@
 	"collection": {
 		"collectionName": "New type",
 		"collectionUsers": [],
-		"collation": {}
+		"collation": {},
+		"dynamic": "true"
 	},
 	"field": {
 		"name": "New field"

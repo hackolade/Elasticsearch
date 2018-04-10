@@ -537,8 +537,7 @@ making sure that you maintain a proper JSON format.
 					"long_range",
 					"double_range",
 					"date_range"
-				],
-				"isTargetProperty": true
+				]
 			},
 			{
 				"propertyName": "coerce",

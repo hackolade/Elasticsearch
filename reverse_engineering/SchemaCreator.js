@@ -68,6 +68,10 @@ module.exports = {
 		schema.properties = this.getServiceFields(sample);
 		schema.properties._source.properties = this.getFields(elasticMapping.properties, sample._source);
 
+		if (elasticMapping.dynamic) {
+			schema.dynamic = elasticMapping.dynamic;
+		}
+
 		return schema;
 	},
 
