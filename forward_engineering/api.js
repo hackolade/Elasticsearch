@@ -4,13 +4,9 @@ module.exports = {
 	generateScript(data, logger, cb) {
 		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
 		let result = "";
-		let mappingScript = {
-			mappings: {
-				[entityData.collectionName.toLowerCase()]: {
-					properties: this.getMappingScript(JSON.parse(jsonSchema))
-				}
-			}
-		};
+		let fieldsSchema = this.getFieldsSchema(JSON.parse(jsonSchema));
+		let typeSchema = this.getTypeSchema(entityData, fieldsSchema);
+		let mappingScript = this.getMappingScript(containerData, typeSchema);
 
 		if (isUpdateScript) {
 			result = this.getCurlScript(mappingScript, modelData, containerData);
@@ -35,7 +31,7 @@ module.exports = {
 		return `PUT /${indexName.toLowerCase()}\n${JSON.stringify(mapping, null, 4)}`;
 	},
 
-	getMappingScript(jsonSchema) {
+	getFieldsSchema(jsonSchema) {
 		let schema = {};
 
 		if (!(jsonSchema.properties && jsonSchema.properties._source && jsonSchema.properties._source.properties)) {
@@ -123,5 +119,89 @@ module.exports = {
 		}
 
 		return schema;
+	},
+
+	getTypeSchema(typeData, fieldsSchema) {
+		let script = {};
+
+		if (typeData.dynamic) {
+			script.dynamic = typeData.dynamic;
+		}
+
+		script.properties = fieldsSchema;
+
+		return {
+			[(typeData.collectionName || "").toLowerCase()]: script
+		};
+	},
+
+	getMappingScript(indexData, typeSchema) {
+		let mappingScript = {};
+		let settings = this.getSettings(indexData);
+		let aliases = this.getAliases(indexData);
+
+		if (settings) {
+			mappingScript.settings = settings;
+		}
+
+		if (aliases) {
+			mappingScript.aliases = aliases;
+		}
+
+		mappingScript.mappings = typeSchema;
+
+		return mappingScript;
+	},
+
+	getSettings(indexData) {
+		let settings;
+		let properties = helper.getContainerLevelProperties();
+		
+		properties.forEach(propertyName => {
+			if (indexData[propertyName]) {
+				if (!settings) {
+					settings = {};
+				}
+
+				settings[propertyName] = indexData[propertyName];
+			}
+		});
+
+		return settings;
+	},
+
+	getAliases(indexData) {
+		let aliases;
+
+		if (!indexData.aliases) {
+			return aliases;
+		}
+
+		indexData.aliases.forEach((alias) => {
+			if (alias.name) {
+				if (!aliases) {
+					aliases = {};
+				}
+
+				aliases[alias.name] = {};
+
+				if (alias.filter) {
+					let filterData = "";
+					try {
+						filterData = JSON.parse(alias.filter);
+					} catch (e) {}
+
+					aliases[alias.name].filter = {
+						term: filterData
+					};
+				}
+
+				if (alias.routing) {
+					aliases[alias.name].routing = alias.routing;
+				}
+			}
+		});
+
+		return aliases;
 	}
 };

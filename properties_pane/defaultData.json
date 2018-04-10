@@ -7,12 +7,15 @@
 	},
 	"container": {
 		"name": "New index",
-		"indexes": []
+		"indexes": [],
+		"number_of_shards": 5,
+		"number_of_replicas": 1
 	},
 	"collection": {
 		"collectionName": "New type",
 		"collectionUsers": [],
-		"collation": {}
+		"collation": {},
+		"dynamic": "true"
 	},
 	"field": {
 		"name": "New field"

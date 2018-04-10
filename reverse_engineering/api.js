@@ -148,7 +148,7 @@ module.exports = {
 		const indices = data.collectionData.dataBaseNames;
 		const types = data.collectionData.collections;
 
-		const bucketInfo = {
+		const defaultBucketInfo = {
 			indexName: '_index',
 			indexType: 'string',
 			docTypeName: '_type',
@@ -200,6 +200,7 @@ module.exports = {
 
 			(client, modelInfo, jsonSchemas, next) => {
 				async.map(indices, (indexName, nextIndex) => {
+					let bucketInfo = Object.assign(getBucketData(jsonSchemas[indexName]), defaultBucketInfo);
 					if (!types[indexName]) {
 						if (includeEmptyCollection) {
 							nextIndex(null, [{
@@ -381,6 +382,8 @@ function getInfoSocket() {
 }
 
 function getSchemaMapping(indices, client) {
+	let result = {};
+
 	SchemaCreator.init();
 	for (let indexName in indices) {
 		SchemaCreator.addIndex(indexName);
@@ -389,5 +392,71 @@ function getSchemaMapping(indices, client) {
 		}
 	}
 
-	return SchemaCreator.getMapping(client);
+	return SchemaCreator.getMapping(client).then(schemas => {
+		result.jsonSchemas = schemas;
+
+		return SchemaCreator.getSettings(client);
+	}).then(settings => {
+		result.settings = settings;
+
+		return SchemaCreator.getAliases(client);
+	}).then(aliases => {
+		result.aliases = aliases;
+
+		return result;
+	}).then(res => {
+		let data = {};
+
+		for (let indexName in res.jsonSchemas) {
+			data[indexName] = res.jsonSchemas[indexName];
+			data[indexName].settings = res.settings[indexName].settings;
+			data[indexName].aliases = res.aliases[indexName].aliases;
+		}
+
+		return data;
+	});
+}
+
+function getBucketData(mappingData) {
+	let data = {};
+
+	if (mappingData.settings) {
+		let settingContainer = mappingData.settings;
+
+		if (mappingData.settings.index) {
+			settingContainer = mappingData.settings.index;
+		}
+
+		if (settingContainer.number_of_shards) {
+			data.number_of_shards = settingContainer.number_of_shards;
+		}
+
+		if (settingContainer.number_of_replicas) {
+			data.number_of_replicas = settingContainer.number_of_replicas;
+		}
+	}
+
+	if (mappingData.aliases) {
+		let aliases = [];
+
+		for (let aliasName in mappingData.aliases) {
+			let alias = {
+				name: aliasName
+			};
+
+			if (mappingData.aliases[aliasName].filter) {
+				alias.filter = JSON.stringify(mappingData.aliases[aliasName].filter.term, null, 4);
+			}
+
+			if (mappingData.aliases[aliasName].index_routing) {
+				alias.routing = mappingData.aliases[aliasName].index_routing;
+			}
+
+			aliases.push(alias);
+		}
+
+		data.aliases = aliases;
+	}
+
+	return data;
 }
