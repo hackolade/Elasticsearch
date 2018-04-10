@@ -399,6 +399,10 @@ function getSchemaMapping(indices, client) {
 	}).then(settings => {
 		result.settings = settings;
 
+		return SchemaCreator.getAliases(client);
+	}).then(aliases => {
+		result.aliases = aliases;
+
 		return result;
 	}).then(res => {
 		let data = {};
@@ -406,6 +410,7 @@ function getSchemaMapping(indices, client) {
 		for (let indexName in res.jsonSchemas) {
 			data[indexName] = res.jsonSchemas[indexName];
 			data[indexName].settings = res.settings[indexName].settings;
+			data[indexName].aliases = res.aliases[indexName].aliases;
 		}
 
 		return data;
@@ -425,9 +430,32 @@ function getBucketData(mappingData) {
 		if (settingContainer.number_of_shards) {
 			data.number_of_shards = settingContainer.number_of_shards;
 		}
+
 		if (settingContainer.number_of_replicas) {
 			data.number_of_replicas = settingContainer.number_of_replicas;
 		}
+	}
+
+	if (mappingData.aliases) {
+		let aliases = [];
+
+		for (let aliasName in mappingData.aliases) {
+			let alias = {
+				name: aliasName
+			};
+
+			if (mappingData.aliases[aliasName].filter) {
+				alias.filter = JSON.stringify(mappingData.aliases[aliasName].filter.term, null, 4);
+			}
+
+			if (mappingData.aliases[aliasName].index_routing) {
+				alias.routing = mappingData.aliases[aliasName].index_routing;
+			}
+
+			aliases.push(alias);
+		}
+
+		data.aliases = aliases;
 	}
 
 	return data;

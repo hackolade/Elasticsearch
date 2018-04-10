@@ -58,6 +58,12 @@ module.exports = {
 		});
 	},
 
+	getAliases(client) {
+		return client.indices.getAlias({
+			index: this.indices
+		});
+	},
+
 	getSchemaTemplate() {
 		return {
 			$schema: "http://json-schema.org/draft-04/schema#",

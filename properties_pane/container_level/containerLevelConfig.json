@@ -157,6 +157,37 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			{
+				"propertyName": "Aliases",
+				"propertyType": "group",
+				"propertyKeyword": "aliases",
+				"shouldValidate": false,
+				"propertyTooltip": "The index aliases API allows aliasing an index with a name",
+				"structure": [
+					{
+						"propertyName": "Name",
+						"propertyKeyword": "name",
+						"shouldValidate": false,
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Filter",
+						"propertyKeyword": "filter",
+						"propertyValidate": false,
+						"propertyType": "details",
+						"propertyTooltip": "",
+						"template": "textarea"
+					},
+					{
+						"propertyName": "Routing",
+						"propertyKeyword": "routing",
+						"shouldValidate": false,
+						"propertyTooltip": "",
+						"propertyType": "text"
+					}
+				]
+			},
+			{
 				"propertyName": "Description",
 				"propertyKeyword": "description",
 				"shouldValidate": false,

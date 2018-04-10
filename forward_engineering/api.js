@@ -138,9 +138,14 @@ module.exports = {
 	getMappingScript(indexData, typeSchema) {
 		let mappingScript = {};
 		let settings = this.getSettings(indexData);
+		let aliases = this.getAliases(indexData);
 
 		if (settings) {
 			mappingScript.settings = settings;
+		}
+
+		if (aliases) {
+			mappingScript.aliases = aliases;
 		}
 
 		mappingScript.mappings = typeSchema;
@@ -163,5 +168,40 @@ module.exports = {
 		});
 
 		return settings;
+	},
+
+	getAliases(indexData) {
+		let aliases;
+
+		if (!indexData.aliases) {
+			return aliases;
+		}
+
+		indexData.aliases.forEach((alias) => {
+			if (alias.name) {
+				if (!aliases) {
+					aliases = {};
+				}
+
+				aliases[alias.name] = {};
+
+				if (alias.filter) {
+					let filterData = "";
+					try {
+						filterData = JSON.parse(alias.filter);
+					} catch (e) {}
+
+					aliases[alias.name].filter = {
+						term: filterData
+					};
+				}
+
+				if (alias.routing) {
+					aliases[alias.name].routing = alias.routing;
+				}
+			}
+		});
+
+		return aliases;
 	}
 };
