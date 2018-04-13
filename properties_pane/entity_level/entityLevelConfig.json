@@ -85,6 +85,18 @@ making sure that you maintain a proper JSON format.
 		"lowerTab": "Details",
 		"structure": [
 			{
+				"propertyName": "Dynamic",
+				"propertyKeyword": "dynamic",
+				"shouldValidate": false,
+				"propertyTooltip": "dynamic setting value",
+				"propertyType": "select",
+				"options": [
+					"true",
+					"false",
+					"strict"
+				]
+			},
+			{
 				"propertyName": "Comments",
 				"propertyKeyword": "comments",
 				"shouldValidate": false,

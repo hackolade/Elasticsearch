@@ -52,6 +52,18 @@ module.exports = {
 		});
 	},
 
+	getSettings(client) {
+		return client.indices.getSettings({
+			index: this.indices
+		});
+	},
+
+	getAliases(client) {
+		return client.indices.getAlias({
+			index: this.indices
+		});
+	},
+
 	getSchemaTemplate() {
 		return {
 			$schema: "http://json-schema.org/draft-04/schema#",
@@ -67,6 +79,10 @@ module.exports = {
 
 		schema.properties = this.getServiceFields(sample);
 		schema.properties._source.properties = this.getFields(elasticMapping.properties, sample._source);
+
+		if (elasticMapping.dynamic) {
+			schema.dynamic = elasticMapping.dynamic;
+		}
 
 		return schema;
 	},
