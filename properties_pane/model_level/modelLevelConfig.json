@@ -113,7 +113,8 @@ making sure that you maintain a proper JSON format.
 					"5.6.x",
 					"6.0.x",
 					"6.1.x",
-					"6.2.x"
+					"6.2.x",
+					"6.3.x"
 				],
 				"disabledOption": false
 			},
