@@ -1,7 +1,7 @@
 {
 	"name": "Elasticsearch",
-	"version": "0.1.7",
-	"versionDate": "2018-08-09",
+	"version": "0.1.8",
+	"versionDate": "2018-08-28",
 	"author": "hackolade",
 	"engines": {
 		"hackolade": "1.12.7",
@@ -12,19 +12,9 @@
 			"applicationTarget": "ELASTICSEARCH",
 			"title": "Elasticsearch",
 			"versions": [
-				"2.3.x",
-				"2.4.x",
-				"5.0.x",
-				"5.1.x",
-				"5.2.x",
-				"5.3.x",
-				"5.4.x",
-				"5.5.x",
-				"5.6.x",
-				"6.0.x",
-				"6.1.x",
-				"6.2.x",
-				"6.3.x"
+				"2.x",
+				"5.x",
+				"6.x"
 			]
 		},
 		"features": {
