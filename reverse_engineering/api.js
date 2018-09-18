@@ -17,7 +17,7 @@ let _client = null;
 module.exports = {
 	connect: function(connectionInfo, logger, cb){
 		logger.clear();
-		logger.log('error', connectionInfo, 'Connection information', connectionInfo.hiddenKeys);
+		logger.log('info', connectionInfo, 'Connection information', connectionInfo.hiddenKeys);
 		
 		let authString = "";
 
