@@ -176,7 +176,7 @@ making sure that you maintain a proper JSON format.
 						"propertyValidate": false,
 						"propertyType": "details",
 						"propertyTooltip": "",
-						"template": "textarea"
+						"template": "textAreaJson"
 					},
 					{
 						"propertyName": "Routing",
