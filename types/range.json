@@ -4,6 +4,7 @@
 	"dtdAbbreviation": "{x-y}",
 	"parentType": "document",
 	"defaultValues": {
+		"index": true,
 		"relationshipType": "",
 		"parentRelationship": "",
 		"childRelationships": [],
