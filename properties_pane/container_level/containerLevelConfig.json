@@ -86,7 +86,7 @@ making sure that you maintain a proper JSON format.
 		"containerLevelKeys": [{
 			"labelName": "Index",
 			"propertyName": "Index",
-			"propertyKeyword": "index",
+			"propertyKeyword": "_index",
 			"defaultName": "_index",
 			"propertyPrimaryKey": true,
 			"propertyType": "text",
