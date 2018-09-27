@@ -563,6 +563,13 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
 				"propertyName": "store",
 				"propertyKeyword": "store",
 				"shouldValidate": false,

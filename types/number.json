@@ -6,6 +6,7 @@
 	"sample": 15,
 	"useSample": true,
 	"defaultValues": {
+		"index": true,
 		"unit": "",
 		"minimum": "",
 		"exclusiveMinimum": false,
