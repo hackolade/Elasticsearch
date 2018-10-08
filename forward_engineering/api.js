@@ -1,10 +1,16 @@
 const helper = require('../helper/helper.js');
+const schemaHelper = require('../helper/schemaHelper.js');
 
 module.exports = {
 	generateScript(data, logger, cb) {
 		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
 		let result = "";
-		let fieldsSchema = this.getFieldsSchema(JSON.parse(jsonSchema));
+		let fieldsSchema = this.getFieldsSchema({
+			jsonSchema: JSON.parse(jsonSchema),
+			internalDefinitions: JSON.parse(data.internalDefinitions),
+			modelDefinitions: JSON.parse(data.modelDefinitions),
+			externalDefinitions: JSON.parse(data.externalDefinitions)
+		});
 		let typeSchema = this.getTypeSchema(entityData, fieldsSchema);
 		let mappingScript = this.getMappingScript(containerData, typeSchema);
 
@@ -31,31 +37,34 @@ module.exports = {
 		return `PUT /${indexName.toLowerCase()}\n${JSON.stringify(mapping, null, 4)}`;
 	},
 
-	getFieldsSchema(jsonSchema) {
+	getFieldsSchema(data) {
+		const {
+			jsonSchema
+		} = data;
 		let schema = {};
 
 		if (!(jsonSchema.properties && jsonSchema.properties._source && jsonSchema.properties._source.properties)) {
 			return schema;
 		}
 
-		schema = this.getSchemaByItem(jsonSchema.properties._source.properties)
+		schema = this.getSchemaByItem(jsonSchema.properties._source.properties, data)
 
 		return schema;
 	},
 
-	getSchemaByItem(properties) {
+	getSchemaByItem(properties, data) {
 		let schema = {};
 
 		for (let fieldName in properties) {
 			let field = properties[fieldName];
 
-			schema[fieldName] = this.getField(field);
+			schema[fieldName] = this.getField(field, data);
 		}
 
 		return schema;
 	},
 
-	getField(field) {
+	getField(field, data) {
 		let schema = {};
 		const fieldProperties = helper.getFieldProperties(field.type, field, {});
 		let type = this.getFieldType(field);
@@ -68,12 +77,12 @@ module.exports = {
 			schema.properties = {};
 		}
 
-		this.setProperties(schema, fieldProperties);
+		this.setProperties(schema, fieldProperties, data);
 
 		if (type === 'geo_shape' || type === 'geo_point') {
 			return schema;
 		} else if (field.properties) {
-			schema.properties = this.getSchemaByItem(field.properties);
+			schema.properties = this.getSchemaByItem(field.properties, data);
 		} else if (field.items) {
 			let arrData = field.items;
 
@@ -81,7 +90,7 @@ module.exports = {
 				arrData = field.items[0];
 			}
 
-			schema = Object.assign(schema, this.getField(arrData));
+			schema = Object.assign(schema, this.getField(arrData, data));
 		}
 
 		return schema;
@@ -106,12 +115,25 @@ module.exports = {
 		}
 	},
 
-	setProperties(schema, properties) {
+	setProperties(schema, properties, data) {
 		for (let propName in properties) {
 			if (propName === 'stringfields') {
 				try {
 					schema['fields'] = JSON.parse(properties[propName]);
 				} catch (e) {
+				}
+			} else if (this.isFieldList(properties[propName])) {
+				const names = schemaHelper.getNamesByIds(
+					properties[propName].map(item => item.keyId),
+					[
+						data.jsonSchema,
+						data.internalDefinitions,
+						data.modelDefinitions,
+						data.externalDefinitions
+					]
+				);
+				if (names.length) {
+					schema[propName] = names.length === 1 ? names[0] : names;
 				}
 			} else {
 				schema[propName] = properties[propName];
@@ -203,5 +225,21 @@ module.exports = {
 		});
 
 		return aliases;
+	},
+
+	isFieldList(property) {
+		if (!Array.isArray(property)) {
+			return false;
+		}
+
+		if (!property[0]) {
+			return false;
+		}
+
+		if (property[0].keyId) {
+			return true;
+		}
+
+		return false;
 	}
 };
