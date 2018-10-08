@@ -664,6 +664,106 @@ making sure that you maintain a proper JSON format.
 			"comments",
 			"subtype"
 		],
-		"___2": []
+		"___2": [],
+		"array": [
+			"name",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			{
+				"propertyName": "copy_to",
+				"propertyKeyword": "copy_to",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			},
+			"minItems",
+			"maxItems",
+			"uniqueItems",
+			"additionalItems",
+			"comments"
+		],
+		"nested": [
+			"name",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			"minItems",
+			"maxItems",
+			"uniqueItems",
+			{
+				"propertyName": "copy_to",
+				"propertyKeyword": "copy_to",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			},
+			"additionalItems",
+			"comments"
+		],
+		"null": [
+			"name",
+			"sampleName",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			{
+				"propertyName": "copy_to",
+				"propertyKeyword": "copy_to",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			},
+			"comments"
+		],
+		"object": [
+			"name",
+			"sampleName",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			{
+				"propertyName": "copy_to",
+				"propertyKeyword": "copy_to",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			},
+			"minProperties",
+			"maxProperties",
+			"additionalProperties",
+			"comments"
+		]
 	}
 }
