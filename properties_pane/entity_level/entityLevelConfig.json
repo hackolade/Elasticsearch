@@ -85,7 +85,7 @@ making sure that you maintain a proper JSON format.
 		"lowerTab": "Details",
 		"structure": [
 			{
-				"propertyName": "Dynamic",
+				"propertyName": "dynamic",
 				"propertyKeyword": "dynamic",
 				"shouldValidate": false,
 				"propertyTooltip": "dynamic setting value",
@@ -95,6 +95,12 @@ making sure that you maintain a proper JSON format.
 					"false",
 					"strict"
 				]
+			},
+			{
+				"propertyName": "enabled",
+				"propertyKeyword": "enabled",
+				"shouldValidate": false,
+				"propertyType": "checkbox"
 			},
 			{
 				"propertyName": "Comments",
