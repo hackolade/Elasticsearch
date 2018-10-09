@@ -11,6 +11,8 @@
 		"foreignField": [],
 		"properties": [],
 		"dependencies": [],
+		"orientation": "ccw",
+		"ignore_z_value": true,
 		"minProperties": "",
 		"maxProperties": "",
 		"additionalProperties": false,
