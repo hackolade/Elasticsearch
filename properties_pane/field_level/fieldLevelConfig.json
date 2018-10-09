@@ -76,6 +76,24 @@ making sure that you maintain a proper JSON format.
 						"allowNegative": false
 					}
 				]
+			},
+			{
+				"propertyName": "Field List",
+				"propertyKeyword": "keyList",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList"
+			}, 
+			{
+				"propertyName": "List with attribute",
+				"propertyKeyword": "keyListOrder",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"attributeList": [
+					"ascending",
+					"descending"
+				]
 			}
 
 */
@@ -86,15 +104,8 @@ making sure that you maintain a proper JSON format.
 			"name",
 			"schemaId",
 			"type",
-			"description",
-			"dependencies",
-			"required",
-			"primaryKey",
-			"foreignCollection",
-			"foreignField",
-			"relationshipType",
 			{
-				"propertyName": "Mode",
+				"propertyName": "Sub-type",
 				"propertyKeyword": "mode",
 				"shouldValidate": false,
 				"propertyType": "select",
@@ -105,13 +116,31 @@ making sure that you maintain a proper JSON format.
 				"data": "options",
 				"valueType": "string"
 			},
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
 			{
-				"propertyName": "Fields",
-				"propertyKeyword": "stringfields",
-				"propertyValidate": false,
-				"propertyTooltip": "Popup for fields entry",
-				"propertyType": "details",
-				"template": "textarea",
+				"propertyName": "analyzer",
+				"propertyKeyword": "analyzer",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of built-in analyzers",
+				"propertyType": "select",
+				"options": [
+					"",
+					"standard",
+					"simple",
+					"whitespace",
+					"stop",
+					"keyword",
+					"pattern",
+					"english",
+					"french",
+					"fingerprint"
+				],
 				"isTargetProperty": true
 			},
 			{
@@ -123,6 +152,14 @@ making sure that you maintain a proper JSON format.
 				"allowNegative": false,
 				"isTargetProperty": true
 			},
+			{
+				"propertyName": "copy_to",
+				"propertyKeyword": "copy_to",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			}, 
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
@@ -142,6 +179,35 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			{
+				"propertyName": "fielddata",
+				"propertyKeyword": "fielddata",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "fielddata_frequency_filter",
+				"propertyKeyword": "fielddata_frequency_filter",
+				"propertyValidate": false,
+				"propertyTooltip": "Popup for fields entry",
+				"propertyType": "details",
+				"template": "textarea",
+				"dependency": {
+					"key": "fielddata",
+					"value": true
+				},
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "fields",
+				"propertyKeyword": "stringfields",
+				"propertyValidate": false,
+				"propertyTooltip": "Popup for fields entry",
+				"propertyType": "details",
+				"template": "textarea",
+				"isTargetProperty": true
+			},
+			{
 				"propertyName": "ignore_above",
 				"propertyKeyword": "ignore_above",
 				"propertyValidate": false,
@@ -154,13 +220,14 @@ making sure that you maintain a proper JSON format.
 				},
 				"isTargetProperty": true
 			},
-			{
+/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
+*/
 			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
@@ -203,6 +270,22 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			{
+				"propertyName": "index_prefixes",
+				"propertyKeyword": "index_prefixes",
+				"propertyValidate": false,
+				"propertyTooltip": "Popup for index_prefixes parameters",
+				"propertyType": "details",
+				"template": "textarea",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "index_phrases",
+				"propertyKeyword": "index_phrases",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
 				"propertyName": "norms",
 				"propertyKeyword": "norms",
 				"shouldValidate": false,
@@ -242,6 +325,13 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			{
+				"propertyName": "term_vector",
+				"propertyKeyword": "term_vector",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
 				"propertyName": "normalizer",
 				"propertyKeyword": "normalizer",
 				"propertyValidate": false,
@@ -264,16 +354,8 @@ making sure that you maintain a proper JSON format.
 			"name",
 			"schemaId",
 			"type",
-			"description",
-			"dependencies",
-			"required",
-			"primaryKey",
-			"foreignCollection",
-			"foreignField",
-			"relationshipType",
-			"default",
 			{
-				"propertyName": "Mode",
+				"propertyName": "Sub-type",
 				"propertyKeyword": "mode",
 				"shouldValidate": false,
 				"propertyType": "select",
@@ -290,6 +372,15 @@ making sure that you maintain a proper JSON format.
 				"data": "options",
 				"valueType": "string"
 			},
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			"default",
+
 			{
 				"propertyName": "coerce",
 				"propertyKeyword": "coerce",
@@ -320,14 +411,14 @@ making sure that you maintain a proper JSON format.
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-			{
+/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-			{
+*/			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
@@ -417,14 +508,14 @@ making sure that you maintain a proper JSON format.
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-			{
+/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-			{
+*/			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
@@ -523,11 +614,8 @@ making sure that you maintain a proper JSON format.
 			"name",
 			"schemaId",
 			"type",
-			"description",
-			"dependencies",
-			"required",
 			{
-				"propertyName": "Mode",
+				"propertyName": "Sub-type",
 				"propertyKeyword": "mode",
 				"shouldValidate": false,
 				"propertyType": "select",
@@ -536,9 +624,13 @@ making sure that you maintain a proper JSON format.
 					"float_range",
 					"long_range",
 					"double_range",
-					"date_range"
+					"date_range",
+					"ip_range"
 				]
 			},
+			"description",
+			"dependencies",
+			"required",
 			{
 				"propertyName": "coerce",
 				"propertyKeyword": "coerce",
@@ -555,14 +647,14 @@ making sure that you maintain a proper JSON format.
 				"allowNegative": false,
 				"isTargetProperty": true
 			},
-			{
+/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"shouldValidate": false,
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-			{
+*/			{
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"shouldValidate": false,
@@ -586,20 +678,210 @@ making sure that you maintain a proper JSON format.
 			"name",
 			"schemaId",
 			"type",
+			"subtype",
 			"description",
 			"required",
-			"comments",
-			"subtype"
+			{
+				"propertyName": "ignore_malformed",
+				"propertyKeyword": "ignore_malformed",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "ignore_z_value",
+				"propertyKeyword": "ignore_z_value",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			"comments"
 		],
 		"geo-shape": [
 			"name",
 			"schemaId",
 			"type",
+			"subtype",
 			"description",
 			"required",
-			"comments",
-			"subtype"
+			{
+				"propertyName": "tree",
+				"propertyKeyword": "tree",
+				"shouldValidate": false,
+				"propertyTooltip": "Select the name of the PrefixTree implementation to be used",
+				"propertyType": "select",
+				"options": [
+					"geohash",
+					"quadtree"
+				],
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "precision",
+				"propertyKeyword": "precision",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "tree_levels",
+				"propertyKeyword": "tree_levels",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "strategy",
+				"propertyKeyword": "strategy",
+				"shouldValidate": false,
+				"propertyTooltip": "Select the name of the PrefixTree implementation to be used",
+				"propertyType": "select",
+				"options": [
+					"recursive",
+					"term"
+				],
+				"dependency": {
+					"key": "Subtype",
+					"value": "point"
+				},
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "distance_error_pct",
+				"propertyKeyword": "distance_error_pct",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "orientation",
+				"propertyKeyword": "orientation",
+				"shouldValidate": false,
+				"propertyTooltip": "Select a coordinate system rules",
+				"propertyType": "select",
+				"options": [
+					"right",
+					"ccw",
+					"counterclockwise",
+					"left",
+					"cw",
+					"clockwise"
+				],
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "points_only",
+				"propertyKeyword": "points_only",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "ignore_malformed",
+				"propertyKeyword": "ignore_malformed",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "ignore_z_value",
+				"propertyKeyword": "ignore_z_value",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"comments"
 		],
-		"___2": []
+		"___2": [],
+		"array": [
+			"name",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"minItems",
+			"maxItems",
+			"uniqueItems",
+			"additionalItems",
+			"comments"
+		],
+		"nested": [
+			"name",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "dynamic",
+				"propertyKeyword": "dynamic",
+				"shouldValidate": false,
+				"propertyTooltip": "dynamic setting value",
+				"propertyType": "select",
+				"options": [
+					"true",
+					"false",
+					"strict"
+				]
+			},
+			"minItems",
+			"maxItems",
+			"uniqueItems",
+			"additionalItems",
+			"comments"
+		],
+		"null": [
+			"name",
+			"sampleName",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"comments"
+		],
+		"object": [
+			"name",
+			"sampleName",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "dynamic",
+				"propertyKeyword": "dynamic",
+				"shouldValidate": false,
+				"propertyTooltip": "dynamic setting value",
+				"propertyType": "select",
+				"options": [
+					"true",
+					"false",
+					"strict"
+				]
+			},
+			{
+				"propertyName": "enabled",
+				"propertyKeyword": "enabled",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"minProperties",
+			"maxProperties",
+			"additionalProperties",
+			"comments"
+		]
 	}
 }

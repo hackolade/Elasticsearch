@@ -11,6 +11,7 @@
 		"childRelationships": [],
 		"foreignCollection": "",
 		"foreignField": [],
+		"enabled": true,
 		"properties": [],
 		"dependencies": [],
 		"minProperties": "",
