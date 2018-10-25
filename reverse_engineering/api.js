@@ -186,7 +186,7 @@ module.exports = {
 					logger.log('info', { modelInfo }, 'Model info');
 
 					getMapping(null, client, modelInfo)
-				}).catch(() => getMapping(null, client));
+				}, () => getMapping(null, client));
 			},
 
 			(client, modelInfo, getData) => {
@@ -195,12 +195,16 @@ module.exports = {
 				}, (err) => {
 					logger.log('error', err, 'Error of getting schema');
 					getData(null, client, modelInfo, null);
+				}).catch(err => {
+					logger.log('error', err);
+					this.disconnect(data, logger, () => {});
+					cb(err);
 				});
 			},
 
 			(client, modelInfo, jsonSchemas, next) => {
 				async.map(indices, (indexName, nextIndex) => {
-					let bucketInfo = Object.assign(getBucketData(jsonSchemas[indexName]), defaultBucketInfo);
+					let bucketInfo = Object.assign(getBucketData(jsonSchemas[indexName] || {}), defaultBucketInfo);
 					if (!types[indexName]) {
 						if (includeEmptyCollection) {
 							nextIndex(null, [{
@@ -315,7 +319,7 @@ module.exports = {
 		], (err, items, modelInfo) => {
 			if (err) {
 				logger.log('error', err);
-				this.disconnect(connectionInfo, logger, () => {});
+				this.disconnect(data, logger, () => {});
 			}
 			
 			cb(err, items, modelInfo);
