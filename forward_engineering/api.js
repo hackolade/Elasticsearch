@@ -3,7 +3,8 @@ const schemaHelper = require('../helper/schemaHelper.js');
 
 module.exports = {
 	generateScript(data, logger, cb) {
-		const { jsonSchema, modelData, containerData, entityData, isUpdateScript } = data;
+		const { jsonSchema, modelData, entityData, isUpdateScript } = data;
+		const containerData = data.containerData || {};
 		let result = "";
 		let fieldsSchema = this.getFieldsSchema({
 			jsonSchema: JSON.parse(jsonSchema),
