@@ -828,6 +828,7 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyTooltip": "dynamic setting value",
 				"propertyType": "select",
+				"isTargetProperty": true,
 				"options": [
 					"true",
 					"false",
@@ -865,6 +866,7 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyTooltip": "dynamic setting value",
 				"propertyType": "select",
+				"isTargetProperty": true,
 				"options": [
 					"true",
 					"false",
