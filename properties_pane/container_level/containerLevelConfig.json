@@ -136,7 +136,7 @@ making sure that you maintain a proper JSON format.
 			"defaultType": "object",
 			"disabledFieldOption": true,
 			"underERDDivider": true,
-			"propertiesSource": true
+			"propertiesRoot": true
 		}],
 		"structure": [
 			{
