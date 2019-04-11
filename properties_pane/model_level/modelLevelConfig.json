@@ -104,7 +104,8 @@ making sure that you maintain a proper JSON format.
 				"options": [
 					"2.x",
 					"5.x",
-					"6.x"
+					"6.x",
+					"7.x"
 				],
 				"disabledOption": false
 			},
