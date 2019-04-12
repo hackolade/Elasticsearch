@@ -14,8 +14,12 @@ module.exports = {
 
 		return fieldLevelConfig.structure[type].filter(property => {
 			if (typeof property === 'object' && property.isTargetProperty) {
-				if (property.dependency) {
-					return (data[property.dependency.key] == property.dependency.value);
+				if (!property.dependency) {
+					return true;
+				} else if (data[property.dependency.key] != property.dependency.value) {
+					return false;
+				} else if (Array.isArray(property.options) && !property.options.includes(data[property.propertyName])) {
+					return false;
 				} else {
 					return true;
 				}

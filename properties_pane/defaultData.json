@@ -19,7 +19,6 @@
 	},
 	"field": {
 		"name": "New field",
-		"index_options": "positions",
 		"dynamic": "true"
 	},
 	"patternField": {
