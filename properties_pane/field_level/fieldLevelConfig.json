@@ -935,6 +935,64 @@ making sure that you maintain a proper JSON format.
 			"enum",
 			"sample",
 			"comments"
+		],
+		"completion": [
+			"name",
+			"schemaId",
+			"type",
+			"subtype",
+			"description",
+			"required",
+			{
+				"propertyName": "analyzer",
+				"propertyKeyword": "analyzer",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of built-in analyzers",
+				"propertyType": "select",
+				"options": [
+					"",
+					"standard",
+					"simple",
+					"whitespace",
+					"stop",
+					"keyword",
+					"pattern",
+					"english",
+					"french",
+					"fingerprint"
+				],
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "search_analyzer",
+				"propertyKeyword": "search_analyzer",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "preserve_separators",
+				"propertyKeyword": "preserve_separators",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "preserve_position_increments",
+				"propertyKeyword": "preserve_position_increments",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "max_input_length",
+				"propertyKeyword": "max_input_length",
+				"propertyValidate": true,
+				"propertyType": "numeric",
+				"valueType": "integer",
+				"allowNegative": false
+			},
+			"comments"
 		]
 	}
 }
