@@ -1,10 +1,12 @@
 {
-	"name": "ip",
-	"erdAbbreviation": "<ip>",
-	"dtdAbbreviation": "{ip}",
-	"useSample": true,
-	"default": true,
+	"name": "annotated_text",
+	"erdAbbreviation": "<an_txt>",
+	"dtdAbbreviation": "{AnT}",
+	"useSample": false,
+	"parentType": "string",
 	"defaultValues": {
+		"minLength": "",
+		"maxLength": "",
 		"pattern": "",
 		"default": "",
 		"primaryKey": false,
@@ -14,10 +16,6 @@
 		"foreignCollection": "",
 		"foreignField": [],
 		"enum": [],
-		"sample": "",
-		"boost": 1.0,
-		"doc_values": true,
-		"index": true,
-		"store": false
+		"sample": ""
 	}
 }

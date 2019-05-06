@@ -907,10 +907,6 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
 				"propertyType": "checkbox",
-				"dependency": {
-					"key": "mode",
-					"value": "keyword"
-				},
 				"isTargetProperty": true
 			},
 			{
@@ -925,10 +921,6 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "null_value",
 				"propertyValidate": false,
 				"propertyType": "text",
-				"dependency": {
-					"key": "mode",
-					"value": "keyword"
-				},
 				"isTargetProperty": true
 			},
 			{
@@ -943,6 +935,248 @@ making sure that you maintain a proper JSON format.
 			"enum",
 			"sample",
 			"comments"
-		]
+		],
+		"completion": [
+			"name",
+			"schemaId",
+			"type",
+			"subtype",
+			"description",
+			"required",
+			{
+				"propertyName": "analyzer",
+				"propertyKeyword": "analyzer",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of built-in analyzers",
+				"propertyType": "select",
+				"options": [
+					"",
+					"standard",
+					"simple",
+					"whitespace",
+					"stop",
+					"keyword",
+					"pattern",
+					"english",
+					"french",
+					"fingerprint"
+				],
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "search_analyzer",
+				"propertyKeyword": "search_analyzer",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "preserve_separators",
+				"propertyKeyword": "preserve_separators",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "preserve_position_increments",
+				"propertyKeyword": "preserve_position_increments",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "max_input_length",
+				"propertyKeyword": "max_input_length",
+				"propertyValidate": true,
+				"propertyType": "numeric",
+				"valueType": "integer",
+				"allowNegative": false
+			},
+			"comments"
+		],
+		"token_count": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "analyzer",
+				"propertyKeyword": "analyzer",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of built-in analyzers",
+				"propertyType": "select",
+				"options": [
+					"",
+					"standard",
+					"simple",
+					"whitespace",
+					"stop",
+					"keyword",
+					"pattern",
+					"english",
+					"french",
+					"fingerprint"
+				],
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "enable_position_increments",
+				"propertyKeyword": "enable_position_increments",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number",
+				"allowNegative": false,
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"pattern",
+			"format",
+			"enum",
+			"sample",
+			"comments"
+		],
+		"mapper-murmur3": "string",
+		"annotated_text": "string",
+		"percolator": "binary",
+		"join": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "relations",
+				"propertyKeyword": "relations",
+				"propertyType": "group",
+				"structure": [
+					{
+						"propertyName": "parent",
+						"propertyKeyword": "parent",
+						"shouldValidate": false,
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "children",
+						"propertyKeyword": "children",
+						"shouldValidate": false,
+						"propertyType": "group",
+						"structure": [{
+							"propertyName": "name",
+							"propertyKeyword": "name",
+							"propertyType": "text",
+							"shouldValidate": false
+						}]
+					}
+				]
+			},
+			{
+				"propertyName": "eager_global_ordinals",
+				"propertyKeyword": "eager_global_ordinals",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"comments"
+		],
+		"alias": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "path",
+				"propertyKeyword": "path",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			},
+			"comments"
+		],
+		"rank_feature": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			"default",
+			{
+				"propertyName": "positive_score_impact",
+				"propertyKeyword": "positive_score_impact",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"unit",
+			"minimum",
+			"exclusiveMinimum",
+			"maximum",
+			"exclusiveMaximum",
+			"multipleOf",
+			"divisibleBy",
+			"enum",
+			"sample",
+			"comments"
+		],
+		"rank_features": [
+			"name",
+			"sampleName",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"minProperties",
+			"maxProperties",
+			"additionalProperties",
+			"comments"
+		],
+		"dense_vector": "array",
+		"sparse_vector": "document"
 	}
 }
