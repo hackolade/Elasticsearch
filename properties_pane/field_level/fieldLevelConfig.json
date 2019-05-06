@@ -1073,6 +1073,47 @@ making sure that you maintain a proper JSON format.
 		],
 		"mapper-murmur3": "string",
 		"annotated_text": "string",
-		"percolator": "binary"
+		"percolator": "binary",
+		"join": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "relations",
+				"propertyKeyword": "relations",
+				"propertyType": "group",
+				"structure": [
+					{
+						"propertyName": "parent",
+						"propertyKeyword": "parent",
+						"shouldValidate": false,
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "children",
+						"propertyKeyword": "children",
+						"shouldValidate": false,
+						"propertyType": "group",
+						"structure": [{
+							"propertyName": "name",
+							"propertyKeyword": "name",
+							"propertyType": "text",
+							"shouldValidate": false
+						}]
+					}
+				]
+			},
+			{
+				"propertyName": "eager_global_ordinals",
+				"propertyKeyword": "eager_global_ordinals",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"comments"
+		]
 	}
 }
