@@ -993,6 +993,83 @@ making sure that you maintain a proper JSON format.
 				"allowNegative": false
 			},
 			"comments"
+		],
+		"token_count": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "analyzer",
+				"propertyKeyword": "analyzer",
+				"shouldValidate": false,
+				"propertyTooltip": "Select from list of built-in analyzers",
+				"propertyType": "select",
+				"options": [
+					"",
+					"standard",
+					"simple",
+					"whitespace",
+					"stop",
+					"keyword",
+					"pattern",
+					"english",
+					"french",
+					"fingerprint"
+				],
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "enable_position_increments",
+				"propertyKeyword": "enable_position_increments",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "boost",
+				"propertyKeyword": "boost",
+				"propertyValidate": false,
+				"propertyType": "numeric",
+				"valueType": "number",
+				"allowNegative": false,
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "doc_values",
+				"propertyKeyword": "doc_values",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "index",
+				"propertyKeyword": "index",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "null_value",
+				"propertyKeyword": "null_value",
+				"propertyValidate": false,
+				"propertyType": "text",
+				"isTargetProperty": true
+			},
+			{
+				"propertyName": "store",
+				"propertyKeyword": "store",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"pattern",
+			"format",
+			"enum",
+			"sample",
+			"comments"
 		]
 	}
 }
