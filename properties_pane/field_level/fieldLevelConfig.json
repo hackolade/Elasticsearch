@@ -1114,6 +1114,23 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			"comments"
+		],
+		"alias": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			{
+				"propertyName": "path",
+				"propertyKeyword": "path",
+				"shouldValidate": false,
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"isTargetProperty": true
+			},
+			"comments"
 		]
 	}
 }
