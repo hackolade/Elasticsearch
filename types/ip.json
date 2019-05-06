@@ -1,0 +1,25 @@
+{
+	"name": "ip",
+	"erdAbbreviation": "<ip>",
+	"dtdAbbreviation": "{ip}",
+	"useSample": true,
+	"default": true,
+	"defaultValues": {
+		"minLength": "",
+		"maxLength": "",
+		"pattern": "",
+		"default": "",
+		"primaryKey": false,
+		"relationshipType": "",
+		"parentRelationship": "",
+		"childRelationships": [],
+		"foreignCollection": "",
+		"foreignField": [],
+		"enum": [],
+		"sample": "",
+		"mode": "text",
+		"index_options": "docs",
+		"similarity": "",
+		"index": true
+	}
+}
