@@ -1070,6 +1070,7 @@ making sure that you maintain a proper JSON format.
 			"enum",
 			"sample",
 			"comments"
-		]
+		],
+		"mapper-murmur3": "string"
 	}
 }
