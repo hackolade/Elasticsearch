@@ -1072,6 +1072,7 @@ making sure that you maintain a proper JSON format.
 			"comments"
 		],
 		"mapper-murmur3": "string",
-		"annotated_text": "string"
+		"annotated_text": "string",
+		"percolator": "binary"
 	}
 }
