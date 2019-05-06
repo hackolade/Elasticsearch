@@ -1131,6 +1131,50 @@ making sure that you maintain a proper JSON format.
 				"isTargetProperty": true
 			},
 			"comments"
+		],
+		"rank_feature": [
+			"name",
+			"schemaId",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"primaryKey",
+			"foreignCollection",
+			"foreignField",
+			"relationshipType",
+			"default",
+			{
+				"propertyName": "positive_score_impact",
+				"propertyKeyword": "positive_score_impact",
+				"shouldValidate": false,
+				"propertyType": "checkbox",
+				"isTargetProperty": true
+			},
+			"unit",
+			"minimum",
+			"exclusiveMinimum",
+			"maximum",
+			"exclusiveMaximum",
+			"multipleOf",
+			"divisibleBy",
+			"enum",
+			"sample",
+			"comments"
+		],
+		"rank_features": [
+			"name",
+			"sampleName",
+			"schemaId",
+			"refPath",
+			"type",
+			"description",
+			"dependencies",
+			"required",
+			"minProperties",
+			"maxProperties",
+			"additionalProperties",
+			"comments"
 		]
 	}
 }
