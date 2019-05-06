@@ -28,10 +28,10 @@ const getPathById = (schema, id, path) => {
 	}
 };
 
-const getNameByPath = (schema, path, parentName) => {
+const getNameByPath = (schema, path) => {
 	if (schema.properties) {
 		return Object.keys(schema.properties).reduce((foundedName, propertyName) => {
-			if (foundedName !== "") {
+			if (foundedName.length) {
 				return foundedName;
 			}
 
@@ -42,14 +42,16 @@ const getNameByPath = (schema, path, parentName) => {
 			}
 
 			if (path.length === 1) {
-				return propertyName;
+				return [ propertyName ];
 			}
 
-			return getNameByPath(property, path.slice(1), propertyName);
-		}, "");
+			return [
+				propertyName, ...getNameByPath(property, path.slice(1))
+			];
+		}, []);
 	} else if (Array.isArray(schema.items)) {
 		return schema.items.reduce((foundedName, property, i) => {
-			if (foundedName !== "") {
+			if (foundedName.length) {
 				return foundedName;
 			}
 
@@ -58,34 +60,72 @@ const getNameByPath = (schema, path, parentName) => {
 			}
 
 			if (path.length === 1) {
-				return parentName + '[' + i + ']';
+				return [ '[' + i + ']' ];
 			}
 
-			return getNameByPath(property, path.slice(1), parentName + '[' + i + ']');
-		}, "");
+			return [
+				'[' + i + ']',
+				...getNameByPath(property, path.slice(1), '[' + i + ']')
+			];
+		}, []);
 	} else if (Object(schema.items) === schema.items) {
 		const property = schema.items;
 
 		if (property.GUID !== path[0]) {
-			return "";
+			return [ "" ];
 		}
 
 		if (path.length === 1) {
-			return parentName + '[0]';
+			return ['[0]'];
 		}
 
-		return getNameByPath(property, path.slice(1), parentName + '[0]');
+		return [
+			'[0]',
+			...getNameByPath(property, path.slice(1), '[0]')
+		];
 	}
+};
+
+const joinIndex = (items) => {
+	return items.reduce((result, item) => {
+		if (/\[\d+\]/.test(item)) {
+			return [
+				...result.slice(-1),
+				result[result.length - 1] + item
+			];
+		} else {
+			return [
+				...result,
+				item
+			];
+		}
+	}, []);
 };
 
 const findFieldNameById = (id, source) => {
 	let path = getPathById(source, id, []);
 	
 	if (path) {
-		return getNameByPath(source, path, "");
+		const name = joinIndex(getNameByPath(source, path, ""));
+
+		return name[name.length - 1] || "";
 	} else {
 		return "";
 	}
+};
+
+const getPathName = (id, sources) => {
+	for (let i = 0; i < sources.length; i++) {
+		let path = getPathById(sources[i], id, []);
+		
+		if (path) {
+			const name = getNameByPath(sources[i], path, "");
+
+			return joinIndex(name.slice(1)).join('.');
+		}
+	}
+
+	return "";
 };
 
 const getNamesByIds = (ids, sources) => {
@@ -103,5 +143,6 @@ const getNamesByIds = (ids, sources) => {
 };
 
 module.exports = {
-	getNamesByIds
+	getNamesByIds,
+	getPathName
 };
