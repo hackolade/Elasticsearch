@@ -5,8 +5,6 @@
 	"useSample": true,
 	"default": true,
 	"defaultValues": {
-		"minLength": "",
-		"maxLength": "",
 		"pattern": "",
 		"default": "",
 		"primaryKey": false,
@@ -17,9 +15,9 @@
 		"foreignField": [],
 		"enum": [],
 		"sample": "",
-		"mode": "text",
-		"index_options": "docs",
-		"similarity": "",
-		"index": true
+		"boost": 1.0,
+		"doc_values": true,
+		"index": true,
+		"store": false
 	}
 }

@@ -907,10 +907,6 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "doc_values",
 				"shouldValidate": false,
 				"propertyType": "checkbox",
-				"dependency": {
-					"key": "mode",
-					"value": "keyword"
-				},
 				"isTargetProperty": true
 			},
 			{
@@ -925,10 +921,6 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "null_value",
 				"propertyValidate": false,
 				"propertyType": "text",
-				"dependency": {
-					"key": "mode",
-					"value": "keyword"
-				},
 				"isTargetProperty": true
 			},
 			{
