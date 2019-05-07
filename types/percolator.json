@@ -1,10 +1,9 @@
 {
-	"name": "binary",
-	"erdAbbreviation": "<bin>",
-	"dtdAbbreviation": "{BIN}",
+	"name": "percolator",
+	"erdAbbreviation": "<perc>",
+	"dtdAbbreviation": "{PERC}",
 	"parentType": "binary",
 	"useSample": false,
-	"default": true,
 	"defaultValues": {
 		"relationshipType": "",
 		"parentRelationship": "",

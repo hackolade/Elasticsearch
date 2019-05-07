@@ -1,10 +1,12 @@
 {
-	"name": "ip",
-	"erdAbbreviation": "<ip>",
-	"dtdAbbreviation": "{ip}",
+	"name": "murmur3",
+	"erdAbbreviation": "<mm3>",
+	"dtdAbbreviation": "{mm3}",
+	"useSample": false,
 	"parentType": "string",
-	"useSample": true,
 	"defaultValues": {
+		"minLength": "",
+		"maxLength": "",
 		"pattern": "",
 		"default": "",
 		"primaryKey": false,
@@ -14,10 +16,6 @@
 		"foreignCollection": "",
 		"foreignField": [],
 		"enum": [],
-		"sample": "",
-		"boost": 1.0,
-		"doc_values": true,
-		"index": true,
-		"store": false
+		"sample": ""
 	}
 }

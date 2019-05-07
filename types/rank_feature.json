@@ -1,13 +1,11 @@
 {
-	"name": "number",
-	"erdAbbreviation": "<num>",
-	"dtdAbbreviation": "{123}",
+	"name": "rank_feature",
+	"erdAbbreviation": "<rf>",
+	"dtdAbbreviation": "{RF}",
 	"parentType": "numeric",
 	"sample": 15,
 	"useSample": true,
-	"default": true,
 	"defaultValues": {
-		"index": true,
 		"unit": "",
 		"minimum": "",
 		"exclusiveMinimum": false,
@@ -23,7 +21,6 @@
 		"foreignCollection": "",
 		"foreignField": [],
 		"enum": [],
-		"mode": "long",
 		"sample": ""
 	}
 }

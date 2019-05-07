@@ -1,10 +1,9 @@
 {
-	"name": "binary",
-	"erdAbbreviation": "<bin>",
-	"dtdAbbreviation": "{BIN}",
+	"name": "join",
+	"erdAbbreviation": "<join>",
+	"dtdAbbreviation": "{JOIN}",
 	"parentType": "binary",
 	"useSample": false,
-	"default": true,
 	"defaultValues": {
 		"relationshipType": "",
 		"parentRelationship": "",

@@ -8,7 +8,7 @@ const containerLevelConfig = readConfig('../properties_pane/container_level/cont
 
 module.exports = {
 	getTargetFieldLevelPropertyNames(type, data) {
-		if (!fieldLevelConfig.structure[type]) {
+		if (!fieldLevelConfig.structure[type] || !Array.isArray(fieldLevelConfig.structure[type])) {
 			return [];
 		}
 
