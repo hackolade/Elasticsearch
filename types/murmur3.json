@@ -1,5 +1,5 @@
 {
-	"name": "mapper-murmur3",
+	"name": "murmur3",
 	"erdAbbreviation": "<mm3>",
 	"dtdAbbreviation": "{mm3}",
 	"useSample": false,
