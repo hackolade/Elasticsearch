@@ -15,7 +15,7 @@
 		"foreignField": [],
 		"enum": [],
 		"sample": "",
-		"analyzer": "",
+		"analyzer": "standard",
 		"enable_position_increments": true,
 		"boost": 1.0,
 		"doc_values": true,
