@@ -90,7 +90,7 @@ const joinIndex = (items) => {
 	return items.reduce((result, item) => {
 		if (/\[\d+\]/.test(item)) {
 			return [
-				...result.slice(-1),
+				...result.slice(0, -1),
 				result[result.length - 1] + item
 			];
 		} else {
@@ -121,7 +121,7 @@ const getPathName = (id, sources) => {
 		if (path) {
 			const name = getNameByPath(sources[i], path, "");
 
-			return joinIndex(name.slice(1)).join('.');
+			return name.slice(1).filter(item => !/\[\d+\]/.test(item)).join('.');
 		}
 	}
 

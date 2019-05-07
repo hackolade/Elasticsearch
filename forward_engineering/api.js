@@ -28,8 +28,10 @@ module.exports = {
 		const host = modelData.host || 'localhost';
 		const port = modelData.port || 9200;
 		const indexName = indexData.name || "";
+		const majorVersion = +(modelData.dbVersion || '').split('.').shift();
+		const includeTypeName = majorVersion >= 7 ? '&include_type_name=true' : '';
 
-		return `curl -XPUT '${host}:${port}/${indexName.toLowerCase()}?pretty' -H 'Content-Type: application/json' -d '\n${JSON.stringify(mapping, null, 4)}\n'`;
+		return `curl -XPUT '${host}:${port}/${indexName.toLowerCase()}?pretty${includeTypeName}' -H 'Content-Type: application/json' -d '\n${JSON.stringify(mapping, null, 4)}\n'`;
 	},
 
 	getKibanaScript(mapping, indexData) {
@@ -84,11 +86,11 @@ module.exports = {
 			return Object.assign({}, schema, this.getAliasSchema(field, data));
 		} else if (type === 'join') {
 			return Object.assign({}, schema, this.getJoinSchema(field));
-		} else if ([
-			'completion', 'sparse_vector', 'dense_vector'
-		].includes(type)) {
-			return schema;
-		} else if (type === 'geo_shape' || type === 'geo_point') {
+		} else if (
+			[
+				'completion', 'sparse_vector', 'dense_vector', 'geo_shape', 'geo_point', 'rank_feature', 'rank_features'
+			].includes(type)
+		) {
 			return schema;
 		} else if (field.properties) {
 			schema.properties = this.getSchemaByItem(field.properties, data);
