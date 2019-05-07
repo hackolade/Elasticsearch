@@ -1,11 +1,10 @@
 {
-	"name": "nested",
-	"erdAbbreviation": "<nest>",
-	"dtdAbbreviation": "[...]",
+	"name": "dense_vector",
+	"erdAbbreviation": "<dv>",
+	"dtdAbbreviation": "{DV}",
 	"parentType": "array",
-	"useSample": true,
+	"useSample": false,
 	"defaultValues": {
-		"childValueType": "object",
 		"properties": [],
 		"primaryKey": false,
 		"relationshipType": "",
@@ -13,9 +12,15 @@
 		"childRelationships": [],
 		"foreignCollection": "",
 		"foreignField": [],
-		"additionalItems": true,
+		"additionalItems": false,
 		"minItems": "",
 		"maxItems": "",
-		"uniqueItems": false
+		"uniqueItems": true,
+		"subtype": "number"
+	},
+	"subtypes": {
+		"number": {
+			"childValueType": "number"
+		}
 	}
 }

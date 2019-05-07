@@ -3,6 +3,7 @@
 	"erdAbbreviation": "<null>",
 	"dtdAbbreviation": "{null}",
 	"useSample": false,
+	"default": true,
 	"defaultValues": {
 		"primaryKey": false,
 		"relationshipType": "",

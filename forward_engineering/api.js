@@ -80,7 +80,15 @@ module.exports = {
 
 		this.setProperties(schema, fieldProperties, data);
 
-		if (type === 'geo_shape' || type === 'geo_point') {
+		if (type === 'alias') {
+			return Object.assign({}, schema, this.getAliasSchema(field, data));
+		} else if (type === 'join') {
+			return Object.assign({}, schema, this.getJoinSchema(field));
+		} else if ([
+			'completion', 'sparse_vector', 'dense_vector'
+		].includes(type)) {
+			return schema;
+		} else if (type === 'geo_shape' || type === 'geo_point') {
 			return schema;
 		} else if (field.properties) {
 			schema.properties = this.getSchemaByItem(field.properties, data);
@@ -242,5 +250,55 @@ module.exports = {
 		}
 
 		return false;
+	},
+
+	getJoinSchema(field) {
+		if (!Array.isArray(field.relations)) {
+			return {};
+		}
+
+		const relations = field.relations.reduce((result, item) => {
+			if (!item.parent) {
+				return result;
+			}
+
+			if (!Array.isArray(item.children)) {
+				return result;
+			}
+
+			if (item.children.length === 1) {
+				return Object.assign({}, result, {
+					[item.parent]: (item.children[0] || {}).name
+				});
+			}
+
+			return Object.assign({}, result, {
+				[item.parent]: item.children.map(item => item.name || "")
+			});
+		}, {});
+
+		return { relations };
+	},
+
+	getAliasSchema(field, data) {
+		if (!Array.isArray(field.path)) {
+			return {};
+		}
+
+		if (field.path.length === 0) {
+			return {};
+		}
+
+		const pathName = schemaHelper.getPathName(
+			field.path[0].keyId,
+			[
+				data.jsonSchema,
+				data.internalDefinitions,
+				data.modelDefinitions,
+				data.externalDefinitions
+			]
+		);
+
+		return { path: pathName };
 	}
 };
