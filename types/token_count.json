@@ -2,8 +2,8 @@
 	"name": "token_count",
 	"erdAbbreviation": "<tc>",
 	"dtdAbbreviation": "{tc}",
+	"parentType": "string",
 	"useSample": true,
-	"default": true,
 	"defaultValues": {
 		"pattern": "",
 		"default": "",

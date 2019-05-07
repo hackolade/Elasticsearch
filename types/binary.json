@@ -4,6 +4,7 @@
 	"dtdAbbreviation": "{BIN}",
 	"parentType": "binary",
 	"useSample": false,
+	"default": true,
 	"defaultValues": {
 		"relationshipType": "",
 		"parentRelationship": "",

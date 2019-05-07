@@ -2,8 +2,8 @@
 	"name": "ip",
 	"erdAbbreviation": "<ip>",
 	"dtdAbbreviation": "{ip}",
+	"parentType": "string",
 	"useSample": true,
-	"default": true,
 	"defaultValues": {
 		"pattern": "",
 		"default": "",

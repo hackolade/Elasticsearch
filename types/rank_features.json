@@ -3,7 +3,7 @@
 	"erdAbbreviation": "<RFs>",
 	"dtdAbbreviation": "{RFs}",
 	"parentType": "document",
-	"default": true,
+	"default": false,
 	"defaultValues": {
 		"primaryKey": false,
 		"relationshipType": "",
