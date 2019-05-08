@@ -15,8 +15,8 @@ const snippets = {
 	"multilinestring": require(snippetsPath + "geoshape-multilinestring.json"),
 	"multipolygon": require(snippetsPath + "geoshape-multipolygon.json"),
 	"polygon": require(snippetsPath + "geoshape-polygon.json"),
-	"array": require(snippetsPath + "completionArray.json"),
-	"object": require(snippetsPath + "completionObject.json")
+	"completionArray": require(snippetsPath + "completionArray.json"),
+	"completionObject": require(snippetsPath + "completionObject.json")
 };
 
 const helper = require('../helper/helper');
@@ -142,9 +142,13 @@ module.exports = {
 		}
 
 		if ([
-			'geo-shape', 'geo-point', 'completion'
+			'geo-shape', 'geo-point'
 		].includes(schema.type)) {
 			schema = this.handleSnippet(schema);
+		}
+
+		if (schema.type === 'completion') {
+			schema = this.handleCompletionSnippet(schema);
 		}
 
 		schema = this.setProperties(schema, fieldData);
@@ -340,6 +344,14 @@ module.exports = {
 		} else {
 			return "object";
 		}
+	},
+
+	handleCompletionSnippet(schema) {
+		return Object.assign({}, this.handleSnippet(Object.assign({}, schema, {
+			subType: schema.subType === 'array' ? 'completionArray' : 'completionObject' 
+		})), {
+			subType: schema.subType
+		});
 	},
 
 	handleSnippet(schema) {
