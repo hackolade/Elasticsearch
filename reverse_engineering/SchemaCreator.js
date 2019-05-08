@@ -14,7 +14,9 @@ const snippets = {
 	"geometrycollection": require(snippetsPath + "geoshape-geometrycollection.json"),
 	"multilinestring": require(snippetsPath + "geoshape-multilinestring.json"),
 	"multipolygon": require(snippetsPath + "geoshape-multipolygon.json"),
-	"polygon": require(snippetsPath + "geoshape-polygon.json")
+	"polygon": require(snippetsPath + "geoshape-polygon.json"),
+	"completionArray": require(snippetsPath + "completionArray.json"),
+	"completionObject": require(snippetsPath + "completionObject.json")
 };
 
 const helper = require('../helper/helper');
@@ -78,7 +80,7 @@ module.exports = {
 		sample = sample || {};
 
 		schema.properties = this.getServiceFields(sample);
-		schema.properties._source.properties = this.getFields(elasticMapping.properties, sample._source);
+		schema.properties._source.properties = this.getFields(elasticMapping.properties, sample._source, elasticMapping.properties);
 
 		if (elasticMapping.dynamic) {
 			schema.dynamic = elasticMapping.dynamic;
@@ -87,19 +89,19 @@ module.exports = {
 		return schema;
 	},
 
-	getFields(properties, sample) {
+	getFields(properties, sample, mapping) {
 		let schema = {};
 
 		for (let fieldName in properties) {
 			const currentSample = sample && sample[fieldName];
 
-			schema[fieldName] = this.getField(properties[fieldName], currentSample);
+			schema[fieldName] = this.getField(properties[fieldName], currentSample, mapping);
 		}
 
 		return schema;
 	},
 
-	getField(fieldData, sample) {
+	getField(fieldData, sample, mapping) {
 		let schema = {};
 		
 		if (!fieldData) {
@@ -116,7 +118,7 @@ module.exports = {
 		].indexOf(schema.type) !== -1;
 
 		if (hasProperties) {
-			let properties = this.getFields(fieldData.properties, sample);
+			let properties = this.getFields(fieldData.properties, sample, mapping);
 
 			if (isArrayType) {
 				schema.items = [{
@@ -128,6 +130,10 @@ module.exports = {
 			}
 		}
 
+		if (fieldData.copy_to) {
+			fieldData.copy_to = this.getCopyToPath(fieldData.copy_to, mapping);
+		}
+
 		if (Array.isArray(sample) && !isArrayType) {
 			schema = {
 				type: 'array',
@@ -135,8 +141,14 @@ module.exports = {
 			};
 		}
 
-		if (schema.type === 'geo-shape' || schema.type === 'geo-point') {
+		if ([
+			'geo-shape', 'geo-point'
+		].includes(schema.type)) {
 			schema = this.handleSnippet(schema);
+		}
+
+		if (schema.type === 'completion') {
+			schema = this.handleCompletionSnippet(schema);
 		}
 
 		schema = this.setProperties(schema, fieldData);
@@ -178,7 +190,23 @@ module.exports = {
 			case "binary":
 			case "nested":
 			case "date":
+			case "token_count":
+			case "murmur3":
+			case "annotated_text":
+			case "percolator":
+			case "ip":
+			case "dense_vector":
+			case "sparse_vector":
+			case "alias":
+			case "rank_feature":
+			case "rank_features":
+			case "join":
 				return { type };
+			case "completion":
+				return {
+					type,
+					subType: this.getCompletionSubtype(value)
+				};
 			case "geo_point":
 				return { 
 					type: "geo-point",
@@ -310,6 +338,22 @@ module.exports = {
 		}
 	},
 
+	getCompletionSubtype(value) {
+		if (Array.isArray(value)) {
+			return "array";
+		} else {
+			return "object";
+		}
+	},
+
+	handleCompletionSnippet(schema) {
+		return Object.assign({}, this.handleSnippet(Object.assign({}, schema, {
+			subType: schema.subType === 'array' ? 'completionArray' : 'completionObject' 
+		})), {
+			subType: schema.subType
+		});
+	},
+
 	handleSnippet(schema) {
 		const snippet = snippets[schema.subType];
 		if (snippet) {
@@ -363,11 +407,67 @@ module.exports = {
 		for (let propName in properties) {
 			if (propName === 'fields') {
 				schema["stringfields"] = JSON.stringify(properties[propName], null, 4);
+			} else if (propName === 'relations') {
+				schema[propName] = getRelations(properties[propName]);
 			} else {
 				schema[propName] = properties[propName];
 			}
 		}
 
 		return schema;
+	},
+
+	getCopyToPath(copyToValue, mapping) {
+		const copyTo = Array.isArray(copyToValue) ? copyToValue : [ copyToValue ];
+
+		const result = copyTo.reduce((result, propertyName) => {
+			return [
+				...result,
+				...findPropertiesInMapping(propertyName, mapping)
+			];
+		}, []);
+
+		return result;
 	}
+}; 
+
+const getRelations = (relations) => {
+	if (typeof relations !== 'object') {
+		return [];
+	}
+
+	return Object.keys(relations).map((parentName) => {
+		const children = Array.isArray(relations[parentName]) ? relations[parentName] : [ relations[parentName] ];
+		
+		return {
+			parent: parentName,
+			children: children.map(item => ({ name: item }))
+		};
+	}, {});
+};
+
+const findPropertiesInMapping = (propertyName, mapping) => {
+	const getPaths = (propertyName, properties, path) => {
+		return Object.keys(properties).reduce((result, name) => {
+			const property = properties[name];
+
+			if (property.properties) {
+				result = [
+					...result,
+					...getPaths(propertyName, property.properties, [...path, name])
+				];
+			}
+			
+			if (propertyName === name) {
+				result = [
+					...result,
+					[...path, name].join('.')
+				];
+			}
+
+			return result;
+		}, []);
+	};
+
+	return getPaths(propertyName, mapping, []);
 };
