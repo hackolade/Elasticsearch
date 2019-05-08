@@ -112,33 +112,33 @@ module.exports = {
 			
 			const { includeSystemCollection } = connectionInfo;
 
-			client.indices.getMapping()
-				.then(data => {
-					let result = [];
+			client.info().then(info => {
+				const majorVersion = +info.version.number.split('.').shift();
+			
+				return getIndexes(client, includeSystemCollection)
+					.then(indexes => {
+						return Object.keys(indexes).map(indexName => {
+							let dbItem = {
+								dbName: indexName,
+								dbCollections: []
+							};
 
-					for (let index in data) {
-						if (!includeSystemCollection && index[0] === '.') {
-							continue;
-						}
+							if (majorVersion < 7 && indexes[indexName].mappings) {
+								dbItem.dbCollections = Object.keys(indexes[indexName].mappings);
+							}
 
-						let dbItem = {
-							dbName: index,
-							dbCollections: []
-						};
-
-						if (data[index].mappings) {
-							dbItem.dbCollections = Object.keys(data[index].mappings);
-						}
-
-						result.push(dbItem);
-					}
-
-					cb(null, result);
-				})
-				.catch(err => {
+							return dbItem;
+						});
+					});
+			})
+			.then(
+				(data) => {
+					cb(null, data);
+				}, err => {
 					logger.log('error', err);
 					cb(err);
-				});
+				}
+			);
 		});
 	},
 
@@ -190,7 +190,9 @@ module.exports = {
 			},
 
 			(client, modelInfo, getData) => {
-				getSchemaMapping(types, client).then((jsonSchemas) => {
+				const indexTypes = getTypesByVersion(modelInfo.version, types, indices);
+				
+				getSchemaMapping(indexTypes, client).then((jsonSchemas) => {
 					getData(null, client, modelInfo, jsonSchemas);
 				}, (err) => {
 					logger.log('error', err, 'Error of getting schema');
@@ -203,9 +205,12 @@ module.exports = {
 			},
 
 			(client, modelInfo, jsonSchemas, next) => {
+				const indexTypes = getTypesByVersion(modelInfo.version, types, indices);
+
 				async.map(indices, (indexName, nextIndex) => {
 					let bucketInfo = Object.assign(getBucketData(jsonSchemas[indexName] || {}), defaultBucketInfo);
-					if (!types[indexName]) {
+
+					if (!indexTypes[indexName]) {
 						if (includeEmptyCollection) {
 							nextIndex(null, [{
 								dbName: indexName,
@@ -217,100 +222,39 @@ module.exports = {
 							nextIndex(null, [{}]);
 						}
 					} else {
-						async.map(types[indexName], (typeName, nextType) => {
-							async.waterfall([
-								(getSampleDocSize) => {
-									client.count({
-										index: indexName,
-										type: typeName
-									}, (err, response) => {
-										getSampleDocSize(err, response);
-									});
-								},
-								
-								(response, searchData) => {
-									const per = recordSamplingSettings.relative.value;
-									const size = (recordSamplingSettings.active === 'absolute')
-										? recordSamplingSettings.absolute.value
-										: Math.round(response.count / 100 * per);
-									const count = size > MAX_DOCUMENTS ? MAX_DOCUMENTS : size;
+						const majorVersion = +modelInfo.version.split('.').shift();
+						const schemaData = {
+							indexName, recordSamplingSettings, containerLevelKeys, bucketInfo, jsonSchemas, fieldInference, client
+						};
 
-									searchData(null, count);
-								},
-
-								(size, getTypeData) => {
-									client.search({
-										index: indexName,
-										type: typeName,
-										size
-									}, (err, data) => {
-										getTypeData(err, data);
-									});
-								},
-
-								(data, nextCallback) => {
-									let documents = data.hits.hits;
-									const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
-									
-									let documentsPackage = {
-										dbName: indexName,
-										collectionName: typeName,
-										documents,
-										indexes: [],
-										bucketIndexes: [],
-										views: [],
-										validation: false,
-										emptyBucket: false,
-										containerLevelKeys,
-										bucketInfo
-									};
-
-									const hasJsonSchema = jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings && jsonSchemas[indexName].mappings[typeName];
-
-									if (hasJsonSchema) {
-										documentsPackage.validation = {
-											jsonSchema: SchemaCreator.getSchema(
-												jsonSchemas[indexName].mappings[typeName],
-												documentTemplate
-											)
-										};
-									}
-
-									if (fieldInference.active === 'field') {
-										documentsPackage.documentTemplate = documentTemplate;
-									}
-
-									nextCallback(null, documentsPackage);
+						if (majorVersion >= 7) {
+							getIndexTypeData('', schemaData).then((docPackage) => {
+								if (shouldPackageBeAdded(docPackage, includeEmptyCollection)) {
+									nextIndex(null, [ docPackage ]);
+								} else {
+									nextIndex(null, []);
 								}
-							], nextType);
-						}, (err, typeData) => {
-							if (err) {
-								nextIndex(err, typeData);
-							} else {
-								const filterData = typeData.filter(docPackage => {
-									if (!includeEmptyCollection) {
-										if (
-											docPackage.documents.length === 0
-											&&
-											docPackage.validation 
-											&& 
-											docPackage.validation.jsonSchema 
-											&& 
-											docPackage.validation.jsonSchema.properties 
-											&&
-											docPackage.validation.jsonSchema.properties._source
-											&& 
-											_.isEmpty(docPackage.validation.jsonSchema.properties._source.properties)
-										) {
-											return false;
-										}
-									}
-									
-									return true;
+							}, err => {
+								nextIndex(err);
+							});
+						} else {
+							async.map(indexTypes[indexName], (typeName, nextType) => {
+								getIndexTypeData(typeName, schemaData).then((docPackage) => {
+									nextType(null, docPackage);
+								}, err => {
+									nextType(err);
 								});
-								nextIndex(null, filterData);
-							}
-						});
+							}, (err, typeData) => {
+								if (err) {
+									nextIndex(err, typeData);
+								} else {
+									const filterData = typeData.filter(docPackage => {
+										return shouldPackageBeAdded(docPackage, includeEmptyCollection);
+									});
+									nextIndex(null, filterData);
+								}
+							});
+						}
 					}
 				}, (err, items) => {
 						next(err, items, modelInfo);
@@ -325,6 +269,146 @@ module.exports = {
 			cb(err, items, modelInfo);
 		});
 	}
+};
+
+const shouldPackageBeAdded = (docPackage, includeEmptyCollection) => {
+	if (includeEmptyCollection) {
+		return true;
+	}
+
+	if (
+		docPackage.documents.length === 0
+		&&
+		docPackage.validation 
+		&& 
+		docPackage.validation.jsonSchema 
+		&& 
+		docPackage.validation.jsonSchema.properties 
+		&&
+		docPackage.validation.jsonSchema.properties._source
+		&& 
+		_.isEmpty(docPackage.validation.jsonSchema.properties._source.properties)
+	) {
+		return false;
+	}
+
+	return true;
+};
+
+const getIndexTypeData = (typeName, {
+	indexName,
+	recordSamplingSettings,
+	containerLevelKeys,
+	bucketInfo,
+	jsonSchemas,
+	fieldInference,
+	client
+}) => new Promise((resolve, reject) => {
+	async.waterfall([
+		(getSampleDocSize) => {
+			client.count({
+				index: indexName,
+				type: typeName
+			}, (err, response) => {
+				getSampleDocSize(err, response);
+			});
+		},
+		
+		(response, searchData) => {
+			const per = recordSamplingSettings.relative.value;
+			const size = (recordSamplingSettings.active === 'absolute')
+				? recordSamplingSettings.absolute.value
+				: Math.round(response.count / 100 * per);
+			const count = size > MAX_DOCUMENTS ? MAX_DOCUMENTS : size;
+
+			searchData(null, count);
+		},
+
+		(size, getTypeData) => {
+			client.search({
+				index: indexName,
+				type: typeName,
+				size
+			}, (err, data) => {
+				getTypeData(err, data);
+			});
+		},
+
+		(data, nextCallback) => {
+			let documents = data.hits.hits;
+			const documentTemplate = documents.reduce((tpl, doc) => _.merge(tpl, doc), {});
+			
+			let documentsPackage = {
+				dbName: indexName,
+				collectionName: typeName || "_doc",
+				documents,
+				indexes: [],
+				bucketIndexes: [],
+				views: [],
+				validation: false,
+				emptyBucket: false,
+				containerLevelKeys,
+				bucketInfo
+			};
+
+			const mappingJsonSchema = typeName 
+				? jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings && jsonSchemas[indexName].mappings[typeName]
+				: jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings;
+			const hasJsonSchema = Boolean(mappingJsonSchema);
+
+			if (hasJsonSchema) {
+				documentsPackage.validation = {
+					jsonSchema: SchemaCreator.getSchema(
+						mappingJsonSchema,
+						documentTemplate
+					)
+				};
+			}
+
+			if (fieldInference.active === 'field') {
+				documentsPackage.documentTemplate = documentTemplate;
+			}
+
+			nextCallback(null, documentsPackage);
+		}
+	], (err, data) => {
+		if (err) {
+			reject(err);
+		} else {
+			resolve(data);
+		}
+	});
+});
+
+const getTypesByVersion = (version, types, indexes) => {
+	const majorVersion = +version.split('.').shift();
+
+	if (majorVersion < 7) {
+		return types;
+	}
+
+	indexes = Array.isArray(indexes) ? indexes : [];
+
+	return indexes.reduce((result, indexName) => {
+		return Object.assign({}, result, { [indexName]: [] });
+	}, {});
+};
+
+const getIndexes = (client, includeSystemCollection) => {
+	return client.indices.getMapping()
+		.then(data => {
+			return Object.keys(data).filter(indexName => {
+				if (!includeSystemCollection && indexName[0] === '.') {
+					return false;
+				} else {
+					return true;
+				}
+			}).reduce((result, indexName) => {
+				return Object.assign({}, result, {
+					[indexName]: data[indexName]
+				});
+			}, {});
+		});
 };
 
 function getSamplingInfo(recordSamplingSettings, fieldInference){

@@ -1085,6 +1085,7 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "relations",
 				"propertyKeyword": "relations",
 				"propertyType": "group",
+				"isTargetProperty": true,
 				"structure": [
 					{
 						"propertyName": "parent",
