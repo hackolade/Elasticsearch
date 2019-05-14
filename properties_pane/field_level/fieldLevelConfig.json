@@ -192,6 +192,7 @@ making sure that you maintain a proper JSON format.
 				"propertyTooltip": "Popup for fields entry",
 				"propertyType": "details",
 				"template": "textarea",
+				"markdown": false,
 				"dependency": {
 					"key": "fielddata",
 					"value": true
@@ -205,6 +206,7 @@ making sure that you maintain a proper JSON format.
 				"propertyTooltip": "Popup for fields entry",
 				"propertyType": "details",
 				"template": "textarea",
+				"markdown": false,
 				"isTargetProperty": true
 			},
 			{
@@ -276,6 +278,7 @@ making sure that you maintain a proper JSON format.
 				"propertyTooltip": "Popup for index_prefixes parameters",
 				"propertyType": "details",
 				"template": "textarea",
+				"markdown": false,
 				"isTargetProperty": true
 			},
 			{
