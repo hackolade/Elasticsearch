@@ -23,5 +23,5 @@
 			"enableForwardEngineering": true
 		}
 	},
-	"description": "Hackolade plugin for Elasticsearch"
+	"description": "Hackolade plugin for Elasticsearch 2.0 thru 6.8.  For version 7.0 and above requires a new plugin!"
 }

@@ -1,5 +1,5 @@
 # Elasticsearch
-Plugin to enable Elasticsearch server as a target in Hackolade data modeling.
+Plugin to enable Elasticsearch server 2.x thru 6.x as a target in Hackolade data modeling.  For version 7.0 and above requires a new plugin!
 
 <div class="main-content">
 
