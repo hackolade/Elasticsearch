@@ -1,7 +1,7 @@
 {
 	"name": "Elasticsearch",
-	"version": "0.1.22",
-	"versionDate": "2019-05-16",
+	"version": "0.1.23",
+	"versionDate": "2019-11-20",
 	"author": "hackolade",
 	"engines": {
 		"hackolade": "1.12.7",
@@ -14,8 +14,7 @@
 			"versions": [
 				"2.x",
 				"5.x",
-				"6.x",
-				"7.x"
+				"6.x"
 			]
 		},
 		"features": {
@@ -24,5 +23,5 @@
 			"enableForwardEngineering": true
 		}
 	},
-	"description": "Hackolade plugin for Elasticsearch"
+	"description": "Hackolade plugin for Elasticsearch 2.0 thru 6.8.  For version 7.0 and above requires a new plugin!"
 }
