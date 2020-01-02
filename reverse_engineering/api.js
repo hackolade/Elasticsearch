@@ -113,7 +113,7 @@ module.exports = {
 			const { includeSystemCollection } = connectionInfo;
 
 			client.info().then(info => {
-				const majorVersion = +info.version.number.split('.').shift();
+				const majorVersion = getMajorVersion(info);
 			
 				return getIndexes(client, includeSystemCollection)
 					.then(indexes => {
@@ -169,6 +169,8 @@ module.exports = {
 		logger.log('info', getSamplingInfo(recordSamplingSettings, fieldInference), 'Reverse-Engineering sampling params', data.hiddenKeys);
 		logger.log('info', { Indices: indices }, 'Selected collection list', data.hiddenKeys);
 
+		let majorVersion;
+
 		async.waterfall([
 			(getDbInfo) => {
 				this.connect(data, logger, getDbInfo);
@@ -182,6 +184,7 @@ module.exports = {
 						port: +socket.port,
 						version: getVersion(info.version.number, versions)
 					};
+					majorVersion = getMajorVersion(info);
 
 					logger.log('info', { modelInfo }, 'Model info');
 
@@ -190,7 +193,7 @@ module.exports = {
 			},
 
 			(client, modelInfo, getData) => {
-				const indexTypes = getTypesByVersion(modelInfo.version, types, indices);
+				const indexTypes = getTypesByVersion(majorVersion, types, indices);
 				
 				getSchemaMapping(indexTypes, client).then((jsonSchemas) => {
 					getData(null, client, modelInfo, jsonSchemas);
@@ -205,7 +208,7 @@ module.exports = {
 			},
 
 			(client, modelInfo, jsonSchemas, next) => {
-				const indexTypes = getTypesByVersion(modelInfo.version, types, indices);
+				const indexTypes = getTypesByVersion(majorVersion, types, indices);
 
 				async.map(indices, (indexName, nextIndex) => {
 					let bucketInfo = Object.assign(getBucketData(jsonSchemas[indexName] || {}), defaultBucketInfo);
@@ -222,7 +225,6 @@ module.exports = {
 							nextIndex(null, [{}]);
 						}
 					} else {
-						const majorVersion = +modelInfo.version.split('.').shift();
 						const schemaData = {
 							indexName, recordSamplingSettings, containerLevelKeys, bucketInfo, jsonSchemas, fieldInference, client
 						};
@@ -269,6 +271,10 @@ module.exports = {
 			cb(err, items, modelInfo);
 		});
 	}
+};
+
+const getMajorVersion = (info) => {
+	return +(((info || {}).version || {}).number || '5').split('.').shift();
 };
 
 const shouldPackageBeAdded = (docPackage, includeEmptyCollection) => {
@@ -380,9 +386,7 @@ const getIndexTypeData = (typeName, {
 	});
 });
 
-const getTypesByVersion = (version, types, indexes) => {
-	const majorVersion = +version.split('.').shift();
-
+const getTypesByVersion = (majorVersion, types, indexes) => {
 	if (majorVersion < 7) {
 		return types;
 	}
