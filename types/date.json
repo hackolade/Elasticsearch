@@ -15,5 +15,46 @@
 		"default": "",
 		"format": "",
 		"sample": ""
-	}
+	},
+	"descriptor": [{
+		"schema": {
+			"format": "date"
+		},
+		"format": "YYYY-MM-DD"
+	}, {
+		"schema": {
+			"format": "time_no_millis"
+		},
+		"format": "hh:mm:ss"
+	}, {
+		"schema": {
+			"format": "time"
+		},
+		"format": "hh:mm:ss.nnn"
+	}, {
+		"schema": {
+			"format": "HH:mm:ss.SSSSSS"
+		},
+		"format": "hh:mm:ss.nnnnnn"
+	}, {
+		"schema": {
+			"format": "date_hour_minute_second"
+		},
+		"format": "YYYY-MM-DD hh:mm:ss"
+	}, {
+		"schema": {
+			"format": "date_hour_minute_second_millis"
+		},
+		"format": "YYYY-MM-DD hh:mm:ss.nnn"
+	}, {
+		"schema": {
+			"format": "date_time"
+		},
+		"format": "YYYY-MM-DD hh:mm:ss.nnnZ"
+	}, {
+		"schema": {
+			"format": "strict_date_optional_time_nanos"
+		},
+		"format": "YYYY-MM-DD hh:mm:ss.nnnnnnZ"
+	}]
 }
