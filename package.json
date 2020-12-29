@@ -1,7 +1,7 @@
 {
 	"name": "Elasticsearch",
-	"version": "0.1.21",
-	"versionDate": "2019-05-08",
+	"version": "0.1.25",
+	"versionDate": "2020-12-11",
 	"author": "hackolade",
 	"engines": {
 		"hackolade": "1.12.7",
@@ -14,15 +14,15 @@
 			"versions": [
 				"2.x",
 				"5.x",
-				"6.x",
-				"7.x"
+				"6.x"
 			]
 		},
 		"features": {
 			"disableMultipleTypes": true,
 			"enableReverseEngineering": true,
-			"enableForwardEngineering": true
+			"enableForwardEngineering": true,
+			"enableReverseEngineeringDetectionSchemaByContent": true
 		}
 	},
-	"description": "Hackolade plugin for Elasticsearch"
+	"description": "Hackolade plugin for Elasticsearch 2.0 thru 6.8.  For version 7.0 and above requires a new plugin!"
 }
