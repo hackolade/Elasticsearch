@@ -4,5 +4,6 @@
 		"WRONG_CONNECTION": "Cannot connect to Elasticsearch instance"
 	},
 	"scenario": "connectToDB",
-	"excludeDocKind": ["id"]
+	"excludeDocKind": ["id"],
+	"helpUrl": "https://hackolade.com/help/ConnecttoanElasticsearchinstance.html"
 }

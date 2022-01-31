@@ -1,7 +1,7 @@
 {
 	"name": "Elasticsearch",
-	"version": "0.1.26",
-	"versionDate": "2021-01-08",
+	"version": "0.1.27",
+	"versionDate": "2022-01-31",
 	"author": "hackolade",
 	"engines": {
 		"hackolade": "1.12.7",
