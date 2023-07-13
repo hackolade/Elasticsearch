@@ -7,10 +7,7 @@ const async = require('async');
 const SchemaCreator = require('./SchemaCreator');
 const versions = require('../package.json').contributes.target.versions;
 
-const MAX_DOCUMENTS = 30000;
-
 let connectionParams = {};
-let saveConnectionInfo = {};
 
 let _client = null;
 
@@ -295,6 +292,16 @@ const shouldPackageBeAdded = (docPackage, includeEmptyCollection) => {
 	return true;
 };
 
+const getSampleDocSize = (count, recordSamplingSettings) => {
+	if (recordSamplingSettings.active === 'absolute') {
+		return Number(recordSamplingSettings.absolute.value);
+	}
+
+	const limit = Math.ceil((count * recordSamplingSettings.relative.value) / 100);
+
+	return Math.min(limit, recordSamplingSettings.maxValue);
+};
+
 const getIndexTypeData = (typeName, {
 	indexName,
 	recordSamplingSettings,
@@ -315,13 +322,9 @@ const getIndexTypeData = (typeName, {
 		},
 		
 		(response, searchData) => {
-			const per = recordSamplingSettings.relative.value;
-			const size = (recordSamplingSettings.active === 'absolute')
-				? recordSamplingSettings.absolute.value
-				: Math.round(response.count / 100 * per);
-			const count = size > MAX_DOCUMENTS ? MAX_DOCUMENTS : size;
+			const size = getSampleDocSize(response.count, recordSamplingSettings);
 
-			searchData(null, count);
+			searchData(null, size);
 		},
 
 		(size, getTypeData) => {
