@@ -5,12 +5,12 @@ module.exports = {
 	generateScript(data, logger, cb) {
 		const { jsonSchema, modelData, entityData, isUpdateScript } = data;
 		const containerData = data.containerData || {};
-		let result = "";
+		let result = '';
 		let fieldsSchema = this.getFieldsSchema({
 			jsonSchema: JSON.parse(jsonSchema),
 			internalDefinitions: JSON.parse(data.internalDefinitions),
 			modelDefinitions: JSON.parse(data.modelDefinitions),
-			externalDefinitions: JSON.parse(data.externalDefinitions)
+			externalDefinitions: JSON.parse(data.externalDefinitions),
 		});
 		let typeSchema = this.getTypeSchema(entityData, fieldsSchema);
 		let mappingScript = this.getMappingScript(containerData, typeSchema);
@@ -27,7 +27,7 @@ module.exports = {
 	getCurlScript(mapping, modelData, indexData) {
 		const host = modelData.host || 'localhost';
 		const port = modelData.port || 9200;
-		const indexName = indexData.name || "";
+		const indexName = indexData.name || '';
 		const majorVersion = +(modelData.dbVersion || '').split('.').shift();
 		const includeTypeName = majorVersion >= 7 ? '&include_type_name=true' : '';
 
@@ -35,22 +35,20 @@ module.exports = {
 	},
 
 	getKibanaScript(mapping, indexData) {
-		const indexName = indexData.name || "";
+		const indexName = indexData.name || '';
 
 		return `PUT /${indexName.toLowerCase()}\n${JSON.stringify(mapping, null, 4)}`;
 	},
 
 	getFieldsSchema(data) {
-		const {
-			jsonSchema
-		} = data;
+		const { jsonSchema } = data;
 		let schema = {};
 
 		if (!(jsonSchema.properties && jsonSchema.properties._source && jsonSchema.properties._source.properties)) {
 			return schema;
 		}
 
-		schema = this.getSchemaByItem(jsonSchema.properties._source.properties, data)
+		schema = this.getSchemaByItem(jsonSchema.properties._source.properties, data);
 
 		return schema;
 	},
@@ -88,7 +86,13 @@ module.exports = {
 			return Object.assign({}, schema, this.getJoinSchema(field));
 		} else if (
 			[
-				'completion', 'sparse_vector', 'dense_vector', 'geo_shape', 'geo_point', 'rank_feature', 'rank_features'
+				'completion',
+				'sparse_vector',
+				'dense_vector',
+				'geo_shape',
+				'geo_point',
+				'rank_feature',
+				'rank_features',
 			].includes(type)
 		) {
 			return schema;
@@ -108,7 +112,7 @@ module.exports = {
 	},
 
 	getFieldType(field) {
-		switch(field.type) {
+		switch (field.type) {
 			case 'geo-shape':
 				return 'geo_shape';
 			case 'geo-point':
@@ -131,17 +135,11 @@ module.exports = {
 			if (propName === 'stringfields') {
 				try {
 					schema['fields'] = JSON.parse(properties[propName]);
-				} catch (e) {
-				}
+				} catch (e) {}
 			} else if (this.isFieldList(properties[propName])) {
 				const names = schemaHelper.getNamesByIds(
 					properties[propName].map(item => item.keyId),
-					[
-						data.jsonSchema,
-						data.internalDefinitions,
-						data.modelDefinitions,
-						data.externalDefinitions
-					]
+					[data.jsonSchema, data.internalDefinitions, data.modelDefinitions, data.externalDefinitions],
 				);
 				if (names.length) {
 					schema[propName] = names.length === 1 ? names[0] : names;
@@ -164,7 +162,7 @@ module.exports = {
 		script.properties = fieldsSchema;
 
 		return {
-			[(typeData.collectionName || "").toLowerCase()]: script
+			[(typeData.collectionName || '').toLowerCase()]: script,
 		};
 	},
 
@@ -189,7 +187,7 @@ module.exports = {
 	getSettings(indexData) {
 		let settings;
 		let properties = helper.getContainerLevelProperties();
-		
+
 		properties.forEach(propertyName => {
 			if (indexData[propertyName]) {
 				if (!settings) {
@@ -210,7 +208,7 @@ module.exports = {
 			return aliases;
 		}
 
-		indexData.aliases.forEach((alias) => {
+		indexData.aliases.forEach(alias => {
 			if (alias.name) {
 				if (!aliases) {
 					aliases = {};
@@ -219,13 +217,13 @@ module.exports = {
 				aliases[alias.name] = {};
 
 				if (alias.filter) {
-					let filterData = "";
+					let filterData = '';
 					try {
 						filterData = JSON.parse(alias.filter);
 					} catch (e) {}
 
 					aliases[alias.name].filter = {
-						term: filterData
+						term: filterData,
 					};
 				}
 
@@ -270,12 +268,12 @@ module.exports = {
 
 			if (item.children.length === 1) {
 				return Object.assign({}, result, {
-					[item.parent]: (item.children[0] || {}).name
+					[item.parent]: (item.children[0] || {}).name,
 				});
 			}
 
 			return Object.assign({}, result, {
-				[item.parent]: item.children.map(item => item.name || "")
+				[item.parent]: item.children.map(item => item.name || ''),
 			});
 		}, {});
 
@@ -291,16 +289,13 @@ module.exports = {
 			return {};
 		}
 
-		const pathName = schemaHelper.getPathName(
-			field.path[0].keyId,
-			[
-				data.jsonSchema,
-				data.internalDefinitions,
-				data.modelDefinitions,
-				data.externalDefinitions
-			]
-		);
+		const pathName = schemaHelper.getPathName(field.path[0].keyId, [
+			data.jsonSchema,
+			data.internalDefinitions,
+			data.modelDefinitions,
+			data.externalDefinitions,
+		]);
 
 		return { path: pathName };
-	}
+	},
 };
