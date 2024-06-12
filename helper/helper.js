@@ -22,7 +22,7 @@ module.exports = {
 				if (typeof property === 'object' && property.isTargetProperty) {
 					if (!property.dependency) {
 						return true;
-					} else if (data[property.dependency.key] != property.dependency.value) {
+					} else if (data[property.dependency.key] !== property.dependency.value) {
 						return false;
 					} else if (
 						Array.isArray(property.options) &&
