@@ -126,10 +126,7 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "Sub-type",
 				"propertyKeyword": "mode",
 				"propertyType": "select",
-				"options": [
-					"text",
-					"keyword"
-				],
+				"options": ["text", "keyword"],
 				"data": "options",
 				"valueType": "string"
 			},
@@ -173,7 +170,7 @@ making sure that you maintain a proper JSON format.
 				"propertyType": "fieldList",
 				"template": "orderedList",
 				"isTargetProperty": true
-			}, 
+			},
 			{
 				"propertyName": "doc_values",
 				"propertyKeyword": "doc_values",
@@ -232,7 +229,7 @@ making sure that you maintain a proper JSON format.
 				},
 				"isTargetProperty": true
 			},
-/*			{
+			/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"propertyType": "checkbox",
@@ -250,12 +247,7 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "index_options",
 				"propertyTooltip": "Select from list of parameter controls for information is added to the inverted index, for search and highlighting purposes",
 				"propertyType": "select",
-				"options": [
-					"docs",
-					"freqs",
-					"positions",
-					"offsets"
-				],
+				"options": ["docs", "freqs", "positions", "offsets"],
 				"dependency": {
 					"key": "mode",
 					"value": "text"
@@ -267,10 +259,7 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "index_options",
 				"propertyTooltip": "Select from list of parameter controls for information is added to the inverted index, for search and highlighting purposes",
 				"propertyType": "select",
-				"options": [
-					"docs",
-					"freqs"
-				],
+				"options": ["docs", "freqs"],
 				"dependency": {
 					"key": "mode",
 					"value": "keyword"
@@ -319,12 +308,7 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "similarity",
 				"propertyTooltip": "Select from list of scoring algorithm or similarity per field",
 				"propertyType": "select",
-				"options": [
-					"",
-					"BM25",
-					"classic",
-					"boolean"
-				],
+				"options": ["", "BM25", "classic", "boolean"],
 				"isTargetProperty": true
 			},
 			{
@@ -360,16 +344,7 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "Sub-type",
 				"propertyKeyword": "mode",
 				"propertyType": "select",
-				"options": [
-					"long",
-					"integer",
-					"short",
-					"byte",
-					"double",
-					"float",
-					"half_float",
-					"scaled_float"
-				],
+				"options": ["long", "integer", "short", "byte", "double", "float", "half_float", "scaled_float"],
 				"data": "options",
 				"valueType": "string"
 			},
@@ -407,13 +382,13 @@ making sure that you maintain a proper JSON format.
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-/*			{
+			/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-*/			{
+*/ {
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"propertyType": "checkbox",
@@ -442,7 +417,7 @@ making sure that you maintain a proper JSON format.
 					"value": "scaled_float"
 				},
 				"isTargetProperty": true
-			},	
+			},
 			"unit",
 			"minimum",
 			"exclusiveMinimum",
@@ -494,13 +469,13 @@ making sure that you maintain a proper JSON format.
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-/*			{
+			/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-*/			{
+*/ {
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"propertyType": "checkbox",
@@ -594,14 +569,7 @@ making sure that you maintain a proper JSON format.
 				"propertyName": "Sub-type",
 				"propertyKeyword": "mode",
 				"propertyType": "select",
-				"options": [
-					"integer_range",
-					"float_range",
-					"long_range",
-					"double_range",
-					"date_range",
-					"ip_range"
-				]
+				"options": ["integer_range", "float_range", "long_range", "double_range", "date_range", "ip_range"]
 			},
 			"dependencies",
 			"required",
@@ -619,13 +587,13 @@ making sure that you maintain a proper JSON format.
 				"allowNegative": false,
 				"isTargetProperty": true
 			},
-/*			{
+			/*			{
 				"propertyName": "include_in_all",
 				"propertyKeyword": "include_in_all",
 				"propertyType": "checkbox",
 				"isTargetProperty": true
 			},
-*/			{
+*/ {
 				"propertyName": "index",
 				"propertyKeyword": "index",
 				"propertyType": "checkbox",
@@ -680,10 +648,7 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "tree",
 				"propertyTooltip": "Select the name of the PrefixTree implementation to be used",
 				"propertyType": "select",
-				"options": [
-					"geohash",
-					"quadtree"
-				],
+				"options": ["geohash", "quadtree"],
 				"isTargetProperty": true
 			},
 			{
@@ -703,10 +668,7 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "strategy",
 				"propertyTooltip": "Select the name of the PrefixTree implementation to be used",
 				"propertyType": "select",
-				"options": [
-					"recursive",
-					"term"
-				],
+				"options": ["recursive", "term"],
 				"dependency": {
 					"key": "Subtype",
 					"value": "point"
@@ -724,14 +686,7 @@ making sure that you maintain a proper JSON format.
 				"propertyKeyword": "orientation",
 				"propertyTooltip": "Select a coordinate system rules",
 				"propertyType": "select",
-				"options": [
-					"right",
-					"ccw",
-					"counterclockwise",
-					"left",
-					"cw",
-					"clockwise"
-				],
+				"options": ["right", "ccw", "counterclockwise", "left", "cw", "clockwise"],
 				"isTargetProperty": true
 			},
 			{
@@ -783,11 +738,7 @@ making sure that you maintain a proper JSON format.
 				"propertyTooltip": "dynamic setting value",
 				"propertyType": "select",
 				"isTargetProperty": true,
-				"options": [
-					"true",
-					"false",
-					"strict"
-				]
+				"options": ["true", "false", "strict"]
 			},
 			"minItems",
 			"maxItems",
@@ -795,16 +746,7 @@ making sure that you maintain a proper JSON format.
 			"additionalItems",
 			"comments"
 		],
-		"null": [
-			"name",
-			"sampleName",
-			"schemaId",
-			"refPath",
-			"description",
-			"type",
-			"dependencies",
-			"comments"
-		],
+		"null": ["name", "sampleName", "schemaId", "refPath", "description", "type", "dependencies", "comments"],
 		"object": [
 			"name",
 			"sampleName",
@@ -820,11 +762,7 @@ making sure that you maintain a proper JSON format.
 				"propertyTooltip": "dynamic setting value",
 				"propertyType": "select",
 				"isTargetProperty": true,
-				"options": [
-					"true",
-					"false",
-					"strict"
-				]
+				"options": ["true", "false", "strict"]
 			},
 			{
 				"propertyName": "enabled",
@@ -1031,12 +969,14 @@ making sure that you maintain a proper JSON format.
 						"propertyName": "children",
 						"propertyKeyword": "children",
 						"propertyType": "group",
-						"structure": [{
-							"propertyName": "name",
-							"propertyKeyword": "name",
-							"propertyType": "text",
-							"shouldValidate": false
-						}]
+						"structure": [
+							{
+								"propertyName": "name",
+								"propertyKeyword": "name",
+								"propertyType": "text",
+								"shouldValidate": false
+							}
+						]
 					}
 				]
 			},

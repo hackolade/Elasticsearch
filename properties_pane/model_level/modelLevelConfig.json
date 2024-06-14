@@ -124,9 +124,7 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyTooltip": "DB vendor",
 				"propertyType": "select",
-				"options": [
-					"Elasticsearch"
-				],
+				"options": ["Elasticsearch"],
 				"disabledOption": true
 			},
 			{
@@ -135,11 +133,7 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyTooltip": "DB version",
 				"propertyType": "select",
-				"options": [
-					"2.x",
-					"5.x",
-					"6.x"
-				],
+				"options": ["2.x", "5.x", "6.x"],
 				"disabledOption": false
 			},
 			{
