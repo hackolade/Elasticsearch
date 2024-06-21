@@ -124,11 +124,7 @@ making sure that you maintain a proper JSON format.
 				"shouldValidate": false,
 				"propertyTooltip": "dynamic setting value",
 				"propertyType": "select",
-				"options": [
-					"true",
-					"false",
-					"strict"
-				]
+				"options": ["true", "false", "strict"]
 			},
 			{
 				"propertyName": "enabled",
