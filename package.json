@@ -26,7 +26,7 @@
     "description": "Hackolade plugin for Elasticsearch 2.0 thru 6.8.  For version 7.0 and above requires a new plugin!",
     "dependencies": {
         "async": "2.6.4",
-        "elasticsearch": "16.7.3",
+        "elasticsearch": "16.1.1",
         "lodash": "4.17.21"
     },
     "lint-staged": {
