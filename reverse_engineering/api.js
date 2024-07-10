@@ -226,10 +226,10 @@ module.exports = {
 					async.map(
 						indices,
 						(indexName, nextIndex) => {
-							let bucketInfo = Object.assign(
-								getBucketData(jsonSchemas[indexName] || {}),
-								defaultBucketInfo,
-							);
+							let bucketInfo = {
+								...getBucketData(jsonSchemas[indexName] || {}),
+								...defaultBucketInfo,
+							};
 
 							if (!indexTypes[indexName]) {
 								if (includeEmptyCollection) {
@@ -439,7 +439,7 @@ const getTypesByVersion = (version, types, indexes) => {
 	indexes = Array.isArray(indexes) ? indexes : [];
 
 	return indexes.reduce((result, indexName) => {
-		return Object.assign({}, result, { [indexName]: [] });
+		return {...result, [indexName]: [] };
 	}, {});
 };
 
@@ -454,9 +454,10 @@ const getIndexes = (client, includeSystemCollection) => {
 				}
 			})
 			.reduce((result, indexName) => {
-				return Object.assign({}, result, {
+				return {
+					...result,
 					[indexName]: data[indexName],
-				});
+				};
 			}, {});
 	});
 };
