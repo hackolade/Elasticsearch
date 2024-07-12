@@ -251,8 +251,7 @@ module.exports = {
 
 				return {};
 		}
-	}
-},
+	},
 
 	getScalar(value) {
 		return typeof value;
@@ -426,9 +425,13 @@ module.exports = {
 	},
 
 	setProperties(schema, fieldData) {
-		const properties = helper.getFieldProperties(schema.type, { mode: fieldData.type, ...fieldData}, {
-			'stringfields': 'fields',
-		});
+		const properties = helper.getFieldProperties(
+			schema.type,
+			{ mode: fieldData.type, ...fieldData },
+			{
+				'stringfields': 'fields',
+			},
+		);
 
 		for (let propName in properties) {
 			if (propName === 'fields') {
