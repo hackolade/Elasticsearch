@@ -102,7 +102,7 @@ module.exports = {
 		let schema = {};
 
 		for (let fieldName in properties) {
-			const currentSample = sample && sample[fieldName];
+			const currentSample = sample?.[fieldName];
 
 			schema[fieldName] = this.getField(properties[fieldName], currentSample, mapping);
 		}
@@ -265,17 +265,21 @@ module.exports = {
 
 		if (isFloat) {
 			return 'float';
-		} else {
-			if (value > -(byte + 1) && value < byte) {
-				return 'byte';
-			} else if (value > -(short + 1) && value < short) {
-				return 'short';
-			} else if (value > -(int + 1) && value < int) {
-				return 'integer';
-			} else {
-				return 'long';
-			}
 		}
+
+		if (value > -(byte + 1) && value < byte) {
+			return 'byte';
+		}
+
+		if (value > -(short + 1) && value < short) {
+			return 'short';
+		}
+
+		if (value > -(int + 1) && value < int) {
+			return 'integer';
+		}
+
+		return 'long';
 	},
 
 	getServiceFields(sample) {
@@ -301,7 +305,7 @@ module.exports = {
 
 	getGeoPointSubtype(value) {
 		if (typeof value === 'string') {
-			if (/\-?\d+\.\d+\,\-?\d+\.\d+/.test(value)) {
+			if (/-?\d+\.\d+,-?\d+\.\d+/.test(value)) {
 				return 'string';
 			} else {
 				return 'geohash';
