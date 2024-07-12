@@ -81,9 +81,9 @@ module.exports = {
 		this.setProperties(schema, fieldProperties, data);
 
 		if (type === 'alias') {
-			return Object.assign({}, schema, this.getAliasSchema(field, data));
+			return { ...schema, ...this.getAliasSchema(field, data) };
 		} else if (type === 'join') {
-			return Object.assign({}, schema, this.getJoinSchema(field));
+			return { ...schema, ...this.getJoinSchema(field) };
 		} else if (
 			[
 				'completion',
@@ -105,7 +105,7 @@ module.exports = {
 				arrData = field.items[0];
 			}
 
-			schema = Object.assign(schema, this.getField(arrData, data));
+			schema = { ...schema, ...this.getField(arrData, data) };
 		}
 
 		return schema;
@@ -267,14 +267,16 @@ module.exports = {
 			}
 
 			if (item.children.length === 1) {
-				return Object.assign({}, result, {
-					[item.parent]: (item.children[0] || {}).name,
-				});
+				return {
+					...result,
+					[item.parent]: item.children?.[0]?.name
+				};
 			}
 
-			return Object.assign({}, result, {
-				[item.parent]: item.children.map(item => item.name || ''),
-			});
+			return {
+				...result,
+				[item.parent]: item.children.map(item => item.name || '')
+			};
 		}, {});
 
 		return { relations };

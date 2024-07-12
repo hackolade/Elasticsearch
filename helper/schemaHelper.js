@@ -64,7 +64,7 @@ const getNameByPath = (schema, path) => {
 				return ['[' + i + ']'];
 			}
 
-			return ['[' + i + ']', ...getNameByPath(property, path.slice(1), '[' + i + ']')];
+			return ['[' + i + ']', ...getNameByPath(property, path.slice(1))];
 		}, []);
 	} else if (Object(schema.items) === schema.items) {
 		const property = schema.items;
@@ -77,7 +77,7 @@ const getNameByPath = (schema, path) => {
 			return ['[0]'];
 		}
 
-		return ['[0]', ...getNameByPath(property, path.slice(1), '[0]')];
+		return ['[0]', ...getNameByPath(property, path.slice(1))];
 	}
 };
 
@@ -95,7 +95,7 @@ const findFieldNameById = (id, source) => {
 	let path = getPathById(source, id, []);
 
 	if (path) {
-		const name = joinIndex(getNameByPath(source, path, ''));
+		const name = joinIndex(getNameByPath(source, path));
 
 		return name[name.length - 1] || '';
 	} else {
@@ -104,11 +104,11 @@ const findFieldNameById = (id, source) => {
 };
 
 const getPathName = (id, sources) => {
-	for (let i = 0; i < sources.length; i++) {
-		let path = getPathById(sources[i], id, []);
+	for (const source of sources) {
+		let path = getPathById(source, id, []);
 
 		if (path) {
-			const name = getNameByPath(sources[i], path, '');
+			const name = getNameByPath(source, path);
 
 			return name
 				.slice(1)
@@ -122,8 +122,8 @@ const getPathName = (id, sources) => {
 
 const getNamesByIds = (ids, sources) => {
 	return ids.reduce((names, id) => {
-		for (let i = 0; i < sources.length; i++) {
-			const name = findFieldNameById(id, sources[i]);
+		for (const source of sources) {
+			const name = findFieldNameById(id, source);
 
 			if (name) {
 				return [...names, name];

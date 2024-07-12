@@ -118,7 +118,10 @@ module.exports = {
 		}
 		const hasProperties = !!fieldData.properties;
 
-		schema = Object.assign(schema, this.getType(fieldData.type, sample, hasProperties));
+		schema = {
+			...schema,
+			...this.getType(fieldData.type, sample, hasProperties),
+		};
 
 		let isArrayType = ['nested', 'array', 'geo-point'].indexOf(schema.type) !== -1;
 
@@ -242,15 +245,14 @@ module.exports = {
 							type: scalar,
 						};
 					}
-				} else {
-					if (hasProperties) {
-						return { type: 'object' };
-					} else {
-						return {};
-					}
+				} else if (hasProperties) {
+					return { type: 'object' };
 				}
+
+				return {};
 		}
-	},
+	}
+},
 
 	getScalar(value) {
 		return typeof value;
@@ -367,17 +369,13 @@ module.exports = {
 	},
 
 	handleCompletionSnippet(schema) {
-		return Object.assign(
-			{},
-			this.handleSnippet(
-				Object.assign({}, schema, {
-					subType: schema.subType === 'array' ? 'completionArray' : 'completionObject',
-				}),
-			),
-			{
-				subType: schema.subType,
-			},
-		);
+		const subType = schema.subType === 'array' ? 'completionArray' : 'completionObject';
+		const snippetSchema = this.handleSnippet({ ...schema, subType });
+
+		return {
+			...snippetSchema,
+			subType: schema.subType,
+		};
 	},
 
 	handleSnippet(schema) {
@@ -428,7 +426,7 @@ module.exports = {
 	},
 
 	setProperties(schema, fieldData) {
-		const properties = helper.getFieldProperties(schema.type, Object.assign({ mode: fieldData.type }, fieldData), {
+		const properties = helper.getFieldProperties(schema.type, { mode: fieldData.type, ...fieldData}, {
 			'stringfields': 'fields',
 		});
 
