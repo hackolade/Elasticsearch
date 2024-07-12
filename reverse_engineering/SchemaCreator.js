@@ -305,7 +305,7 @@ module.exports = {
 
 	getGeoPointSubtype(value) {
 		if (typeof value === 'string') {
-			if (/-?\d+\.\d+,-?\d+\.\d+/.test(value)) {
+			if (/^-?\d+\.\d+,-?\d+\.\d+$/.test(value)) {
 				return 'string';
 			} else {
 				return 'geohash';
