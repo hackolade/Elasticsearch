@@ -2,11 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 const readConfig = pathToConfig => {
+	const resolvedPath = path.join(__dirname, pathToConfig);
+
 	return JSON.parse(
 		fs
-			.readFileSync(path.join(__dirname, pathToConfig))
+			.readFileSync(resolvedPath)
 			.toString()
-			.replace(/\/\*[.\s]*?\*\//gi, ''),
+			.replace(/\/\*[.\s\S]*?\*\//gi, ''),
 	);
 };
 
