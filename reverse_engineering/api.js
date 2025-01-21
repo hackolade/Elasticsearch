@@ -1,9 +1,7 @@
-'use strict';
-
-const elasticsearch = require('elasticsearch');
-const fs = require('fs');
 const _ = require('lodash');
+const fs = require('fs');
 const async = require('async');
+const elasticsearch = require('elasticsearch');
 const SchemaCreator = require('./SchemaCreator');
 const versions = require('../package.json').contributes.target.versions;
 
@@ -319,18 +317,11 @@ const shouldPackageBeAdded = (docPackage, includeEmptyCollection) => {
 		return true;
 	}
 
-	if (
+	return !(
 		docPackage.documents.length === 0 &&
-		docPackage.validation &&
-		docPackage.validation.jsonSchema &&
-		docPackage.validation.jsonSchema.properties &&
-		docPackage.validation.jsonSchema.properties._source &&
+		docPackage.validation?.jsonSchema?.properties?._source &&
 		_.isEmpty(docPackage.validation.jsonSchema.properties._source.properties)
-	) {
-		return false;
-	}
-
-	return true;
+	);
 };
 
 const getSampleDocSize = (count, recordSamplingSettings) => {
@@ -399,11 +390,8 @@ const getIndexTypeData = (
 					};
 
 					const mappingJsonSchema = typeName
-						? jsonSchemas &&
-							jsonSchemas[indexName] &&
-							jsonSchemas[indexName].mappings &&
-							jsonSchemas[indexName].mappings[typeName]
-						: jsonSchemas && jsonSchemas[indexName] && jsonSchemas[indexName].mappings;
+						? jsonSchemas?.[indexName]?.mappings?.[typeName]
+						: jsonSchemas?.[indexName]?.mappings;
 					const hasJsonSchema = Boolean(mappingJsonSchema);
 
 					if (hasJsonSchema) {
@@ -439,7 +427,7 @@ const getTypesByVersion = (version, types, indexes) => {
 	indexes = Array.isArray(indexes) ? indexes : [];
 
 	return indexes.reduce((result, indexName) => {
-		return {...result, [indexName]: [] };
+		return { ...result, [indexName]: [] };
 	}, {});
 };
 
@@ -447,11 +435,7 @@ const getIndexes = (client, includeSystemCollection) => {
 	return client.indices.getMapping().then(data => {
 		return Object.keys(data)
 			.filter(indexName => {
-				if (!includeSystemCollection && indexName[0] === '.') {
-					return false;
-				} else {
-					return true;
-				}
+				return !(!includeSystemCollection && indexName.startsWith('.'));
 			})
 			.reduce((result, indexName) => {
 				return {

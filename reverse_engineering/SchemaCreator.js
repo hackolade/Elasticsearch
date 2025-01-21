@@ -1,3 +1,4 @@
+const { getFieldProperties } = require('../shared/getFieldProperties');
 const snippetsPath = '../snippets/';
 
 const snippets = {
@@ -18,8 +19,6 @@ const snippets = {
 	'completionArray': require(snippetsPath + 'completionArray.json'),
 	'completionObject': require(snippetsPath + 'completionObject.json'),
 };
-
-const helper = require('../helper/helper');
 
 module.exports = {
 	indices: [],
@@ -429,7 +428,7 @@ module.exports = {
 	},
 
 	setProperties(schema, fieldData) {
-		const properties = helper.getFieldProperties(
+		const properties = getFieldProperties(
 			schema.type,
 			{ mode: fieldData.type, ...fieldData },
 			{
