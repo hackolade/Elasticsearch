@@ -1,8 +1,4 @@
-const { readConfig } = require('./readConfig');
-
-const containerLevelConfig = readConfig('../properties_pane/container_level/containerLevelConfig.json');
-
-const getContainerLevelProperties = () => {
+const getContainerLevelProperties = containerLevelConfig => {
 	let properties = [];
 
 	containerLevelConfig.forEach(tab => {

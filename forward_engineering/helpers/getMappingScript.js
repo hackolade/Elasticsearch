@@ -1,8 +1,8 @@
 const { getContainerLevelProperties } = require('../../shared/getContainerLevelProperties');
 
-const getSettings = indexData => {
+const getSettings = (indexData, containerLevelConfig) => {
 	let settings;
-	let properties = getContainerLevelProperties();
+	let properties = getContainerLevelProperties(containerLevelConfig);
 
 	properties.forEach(propertyName => {
 		if (indexData[propertyName]) {
@@ -52,9 +52,9 @@ const getAliases = indexData => {
 	return aliases;
 };
 
-const getMappingScript = (indexData, typeSchema) => {
+const getMappingScript = (indexData, typeSchema, containerLevelConfig) => {
 	let mappingScript = {};
-	let settings = getSettings(indexData);
+	let settings = getSettings(indexData, containerLevelConfig);
 	let aliases = getAliases(indexData);
 
 	if (settings) {

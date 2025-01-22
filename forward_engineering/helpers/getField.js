@@ -103,21 +103,21 @@ const isFieldList = property => {
 	return Boolean(property[0].keyId);
 };
 
-const getSchemaByItem = (properties, data) => {
+const getSchemaByItem = (properties, data, fieldLevelConfig) => {
 	let schema = {};
 
 	for (let fieldName in properties) {
 		let field = properties[fieldName];
 
-		schema[fieldName] = getField(field, data);
+		schema[fieldName] = getField(field, data, fieldLevelConfig);
 	}
 
 	return schema;
 };
 
-const getField = (field, data) => {
+const getField = (field, data, fieldLevelConfig) => {
 	let schema = {};
-	const fieldProperties = getFieldProperties(field.type, field, {});
+	const fieldProperties = getFieldProperties(field.type, field, {}, fieldLevelConfig);
 	let type = getFieldType(field);
 
 	if (type !== 'object' && type !== 'array') {

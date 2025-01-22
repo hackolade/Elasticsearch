@@ -252,6 +252,7 @@ module.exports = {
 									jsonSchemas,
 									fieldInference,
 									client,
+									fieldLevelConfig: data.pluginConfiguration.fieldLevelConfig,
 								};
 
 								if (majorVersion >= 7) {
@@ -336,7 +337,16 @@ const getSampleDocSize = (count, recordSamplingSettings) => {
 
 const getIndexTypeData = (
 	typeName,
-	{ indexName, recordSamplingSettings, containerLevelKeys, bucketInfo, jsonSchemas, fieldInference, client },
+	{
+		indexName,
+		recordSamplingSettings,
+		containerLevelKeys,
+		bucketInfo,
+		jsonSchemas,
+		fieldInference,
+		client,
+		fieldLevelConfig,
+	},
 ) =>
 	new Promise((resolve, reject) => {
 		async.waterfall(
@@ -396,7 +406,7 @@ const getIndexTypeData = (
 
 					if (hasJsonSchema) {
 						documentsPackage.validation = {
-							jsonSchema: SchemaCreator.getSchema(mappingJsonSchema, documentTemplate),
+							jsonSchema: SchemaCreator.getSchema(mappingJsonSchema, documentTemplate, fieldLevelConfig),
 						};
 					}
 

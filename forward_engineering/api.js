@@ -1,22 +1,36 @@
 const { getFieldsSchema } = require('./helpers/getFieldsSchema');
-const { getTypeSchema } = require('./helpers/getTypeSchema');
 const { getMappingScript } = require('./helpers/getMappingScript');
+const { getTypeSchema } = require('./helpers/getTypeSchema');
 const { getCurlScript } = require('./helpers/getCurlScript');
 const { getKibanaScript } = require('./helpers/getKibanaScript');
 
 module.exports = {
 	generateScript(data, logger, cb) {
-		const { jsonSchema, modelData, entityData, isUpdateScript } = data;
-		const containerData = data.containerData || {};
+		const {
+			jsonSchema,
+			modelData,
+			entityData,
+			isUpdateScript,
+			pluginConfiguration,
+			internalDefinitions,
+			modelDefinitions,
+			externalDefinitions,
+			containerData = {},
+		} = data;
+
 		let result = '';
-		let fieldsSchema = getFieldsSchema({
+
+		const fieldsSchema = getFieldsSchema({
 			jsonSchema: JSON.parse(jsonSchema),
-			internalDefinitions: JSON.parse(data.internalDefinitions),
-			modelDefinitions: JSON.parse(data.modelDefinitions),
-			externalDefinitions: JSON.parse(data.externalDefinitions),
+			internalDefinitions: JSON.parse(internalDefinitions),
+			modelDefinitions: JSON.parse(modelDefinitions),
+			externalDefinitions: JSON.parse(externalDefinitions),
+			fieldLevelConfig: pluginConfiguration.fieldLevelConfig,
 		});
-		let typeSchema = getTypeSchema(entityData, fieldsSchema);
-		let mappingScript = getMappingScript(containerData, typeSchema);
+
+		const typeSchema = getTypeSchema(entityData, fieldsSchema);
+
+		const mappingScript = getMappingScript(containerData, typeSchema, pluginConfiguration.containerLevelConfig);
 
 		if (isUpdateScript) {
 			result = getCurlScript(mappingScript, modelData, containerData);

@@ -1,8 +1,4 @@
-const { readConfig } = require('./readConfig');
-
-const fieldLevelConfig = readConfig('../properties_pane/field_level/fieldLevelConfig.json');
-
-const getTargetFieldLevelPropertyNames = (type, data) => {
+const getTargetFieldLevelPropertyNames = (type, data, fieldLevelConfig) => {
 	if (!fieldLevelConfig.structure[type] || !Array.isArray(fieldLevelConfig.structure[type])) {
 		return [];
 	}
@@ -26,8 +22,8 @@ const getTargetFieldLevelPropertyNames = (type, data) => {
 		.map(property => property.propertyKeyword);
 };
 
-const getFieldProperties = (type, data, pseudonyms) => {
-	const propertyNames = getTargetFieldLevelPropertyNames(type, data);
+const getFieldProperties = (type, data, pseudonyms, fieldLevelConfig) => {
+	const propertyNames = getTargetFieldLevelPropertyNames(type, data, fieldLevelConfig);
 
 	return propertyNames.reduce((result, propertyName) => {
 		if (Object.hasOwn(data, propertyName)) {
