@@ -147,7 +147,7 @@ const getField = (field, data, fieldLevelConfig) => {
 	) {
 		return schema;
 	} else if (field.properties) {
-		schema.properties = getSchemaByItem(field.properties, data);
+		schema.properties = getSchemaByItem(field.properties, data, fieldLevelConfig);
 	} else if (field.items) {
 		let arrData = field.items;
 
@@ -155,7 +155,7 @@ const getField = (field, data, fieldLevelConfig) => {
 			arrData = field.items[0];
 		}
 
-		schema = { ...schema, ...getField(arrData, data) };
+		schema = { ...schema, ...getField(arrData, data, fieldLevelConfig) };
 	}
 
 	return schema;
