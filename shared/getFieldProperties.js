@@ -10,7 +10,7 @@ const getTargetFieldLevelPropertyNames = (type, data, fieldLevelConfig) => {
 					return true;
 				} else if (data[property.dependency.key] !== property.dependency.value) {
 					return false;
-				} else if (Array.isArray(property.options) && !property.options.includes(data[property.propertyName])) {
+				} else if (Array.isArray(property.options) && !property.options.includes(data[property.fieldName])) {
 					return false;
 				} else {
 					return true;
@@ -19,7 +19,7 @@ const getTargetFieldLevelPropertyNames = (type, data, fieldLevelConfig) => {
 
 			return false;
 		})
-		.map(property => property.propertyKeyword);
+		.map(property => property.fieldKeyword);
 };
 
 const getFieldProperties = (type, data, pseudonyms, fieldLevelConfig) => {
