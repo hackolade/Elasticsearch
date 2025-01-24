@@ -1,5 +1,3 @@
-'use strict';
-
 const getPathById = (schema, id, path) => {
 	if (schema.GUID === id) {
 		return path;
@@ -83,7 +81,7 @@ const getNameByPath = (schema, path) => {
 
 const joinIndex = items => {
 	return items.reduce((result, item) => {
-		if (/\[\d+\]/.test(item)) {
+		if (/\[\d+]/.test(item)) {
 			return [...result.slice(0, -1), result[result.length - 1] + item];
 		} else {
 			return [...result, item];
@@ -112,7 +110,7 @@ const getPathName = (id, sources) => {
 
 			return name
 				.slice(1)
-				.filter(item => !/\[\d+\]/.test(item))
+				.filter(item => !/\[\d+]/.test(item))
 				.join('.');
 		}
 	}

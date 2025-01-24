@@ -1,3 +1,4 @@
+const { getFieldProperties } = require('../shared/getFieldProperties');
 const snippetsPath = '../snippets/';
 
 const snippets = {
@@ -18,8 +19,6 @@ const snippets = {
 	'completionArray': require(snippetsPath + 'completionArray.json'),
 	'completionObject': require(snippetsPath + 'completionObject.json'),
 };
-
-const helper = require('../helper/helper');
 
 module.exports = {
 	indices: [],
@@ -80,7 +79,7 @@ module.exports = {
 		};
 	},
 
-	getSchema(elasticMapping, sample) {
+	getSchema(elasticMapping, sample, fieldLevelConfig) {
 		let schema = this.getSchemaTemplate();
 		sample = sample || {};
 
@@ -89,6 +88,7 @@ module.exports = {
 			elasticMapping.properties,
 			sample._source,
 			elasticMapping.properties,
+			fieldLevelConfig,
 		);
 
 		if (elasticMapping.dynamic) {
@@ -98,19 +98,19 @@ module.exports = {
 		return schema;
 	},
 
-	getFields(properties, sample, mapping) {
+	getFields(properties, sample, mapping, fieldLevelConfig) {
 		let schema = {};
 
 		for (let fieldName in properties) {
 			const currentSample = sample?.[fieldName];
 
-			schema[fieldName] = this.getField(properties[fieldName], currentSample, mapping);
+			schema[fieldName] = this.getField(properties[fieldName], currentSample, mapping, fieldLevelConfig);
 		}
 
 		return schema;
 	},
 
-	getField(fieldData, sample, mapping) {
+	getField(fieldData, sample, mapping, fieldLevelConfig) {
 		let schema = {};
 
 		if (!fieldData) {
@@ -126,7 +126,7 @@ module.exports = {
 		let isArrayType = ['nested', 'array', 'geo-point'].indexOf(schema.type) !== -1;
 
 		if (hasProperties) {
-			let properties = this.getFields(fieldData.properties, sample, mapping);
+			let properties = this.getFields(fieldData.properties, sample, mapping, fieldLevelConfig);
 
 			if (isArrayType) {
 				schema.items = [
@@ -159,7 +159,7 @@ module.exports = {
 			schema = this.handleCompletionSnippet(schema);
 		}
 
-		schema = this.setProperties(schema, fieldData);
+		schema = this.setProperties(schema, fieldData, fieldLevelConfig);
 
 		return schema;
 	},
@@ -428,13 +428,14 @@ module.exports = {
 		return schema;
 	},
 
-	setProperties(schema, fieldData) {
-		const properties = helper.getFieldProperties(
+	setProperties(schema, fieldData, fieldLevelConfig) {
+		const properties = getFieldProperties(
 			schema.type,
 			{ mode: fieldData.type, ...fieldData },
 			{
 				'stringfields': 'fields',
 			},
+			fieldLevelConfig,
 		);
 
 		for (let propName in properties) {
