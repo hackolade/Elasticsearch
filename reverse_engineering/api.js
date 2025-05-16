@@ -11,6 +11,9 @@ let _client = null;
 
 module.exports = {
 	connect: function (connectionInfo, logger, cb) {
+		logger.clear();
+		logger.log('info', connectionInfo, 'Connection information', connectionInfo.hiddenKeys);
+
 		let authString = '';
 
 		if (_client !== null) {
@@ -163,6 +166,12 @@ module.exports = {
 			source: '_source',
 		};
 
+		logger.log(
+			'info',
+			getSamplingInfo(recordSamplingSettings, fieldInference),
+			'Reverse-Engineering sampling params',
+			data.hiddenKeys,
+		);
 		logger.log('info', { Indices: indices }, 'Selected collection list', data.hiddenKeys);
 
 		async.waterfall(
